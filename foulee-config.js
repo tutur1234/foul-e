@@ -8,5 +8,5 @@ const CONFIG = {
     appId: "1:213802628862:web:db7066dc7e92b8b54bd7af"
   },
   stravaClientId: "234668",
-  workerUrl: "https://A_REMPLIR.workers.dev"
+  workerUrl: "https://foulee-strava.arthur1234-monteil.workers.dev/"
 };
