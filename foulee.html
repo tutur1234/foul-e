@@ -171,6 +171,28 @@ svg .lbl{font-family:var(--f-ui);font-size:11px;fill:var(--ink);font-weight:500}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:-.5px}
 
 .list{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.rpe-scale{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.rpe-b{font:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px 6px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;min-width:0}
+.rpe-b b{font-size:15px;font-variant-numeric:tabular-nums}
+.rpe-b span{font-size:9.5px;line-height:1.15;color:var(--muted);text-align:center;overflow-wrap:anywhere}
+.rpe-b:hover{border-color:var(--muted)}
+.rpe-b[aria-pressed="true"]{background:hsl(var(--h) 62% 44%);border-color:transparent;color:#fff}
+.rpe-b[aria-pressed="true"] span{color:rgba(255,255,255,.85)}
+@media (max-width:640px){.rpe-scale{grid-template-columns:repeat(5,1fr)}}
+.dqgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.dq{display:grid;gap:6px}
+.insgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;align-items:start}
+.insgrid .card{margin:0}
+.ins{border-left:3px solid var(--line)}
+.ins-good{border-left-color:var(--good)}.ins-warn{border-left-color:var(--warn)}.ins-bad{border-left-color:var(--bad)}
+.ins-claim{font-size:14.5px;line-height:1.5;margin:0 0 12px}
+.ins-ev{display:flex;flex-wrap:wrap;gap:8px 20px;padding:10px 12px;border-radius:9px;background:var(--sunk);margin-bottom:10px}
+.ins-ev>div{display:flex;flex-direction:column;gap:2px}
+.ins-ev b{font-size:13px;font-weight:600}
+.ins-why summary{cursor:pointer;font-size:13px;font-weight:600}
+.ins-why p{font-size:13px;line-height:1.55;margin:8px 0 0;color:var(--ink)}
+.ins-act{margin:10px 0 0;padding-left:18px;font-size:13px;line-height:1.5;display:grid;gap:4px}
+.ins-ai{margin-top:10px;padding:10px 12px;border-radius:9px;background:var(--sunk);font-size:13px;line-height:1.55;white-space:pre-wrap}
 .list li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:10px 12px;border-radius:9px;background:var(--sunk);font-size:13px}
 .list li .pill{margin-top:1px}
 .list strong{font-weight:600}
@@ -363,7 +385,7 @@ footer p{max-width:100ch}
   <div class="bar-app pad">
     <div class="brand"><span class="logo">F</span>Foulée <small>· suivi course à pied</small></div>
     <nav class="tabs" aria-label="Vues">
-      <a href="#synthese">Synthèse</a><a href="#charge">Charge</a><a href="#allure">Allure</a><a href="#contexte">Contexte</a><a href="#records">Records</a><a href="#seances">Séances</a><a href="#renfo">Renfo</a>
+      <a href="#synthese">Synthèse</a><a href="#charge">Charge</a><a href="#allure">Allure</a><a href="#contexte">Contexte</a><a href="#records">Records</a><a href="#seances">Séances</a><a href="#renfo">Renfo</a><a href="#enseignements">Enseignements</a>
     </nav>
     <div class="me"><button class="btn sm ghost" type="button" id="setBtn" aria-label="Réglages" title="Réglages">⚙</button><button class="btn sm" type="button" id="majBtn" aria-expanded="false" aria-controls="majPop"><span class="sync" aria-hidden="true"></span>MAJ</button><span class="ver">v1.0</span><span class="avatar" title="Arthur">A</span></div>
   </div>
@@ -534,6 +556,15 @@ footer p{max-width:100ch}
   <div class="card" style="padding:4px"><div class="tbl acts"><table id="acts"></table></div><div id="actsMore" class="row" style="justify-content:center;padding:10px 0 6px"></div></div>
  </div>
  <div class="view" id="sDetail" hidden></div>
+</section>
+
+<!-- ENSEIGNEMENTS -->
+<section class="view" id="v-enseignements" hidden>
+  <div class="hero"><div><div class="lab">Tes données croisées · mécanismes expliqués</div><h1 style="margin-top:6px">Ce que tes données <em>t'apprennent.</em></h1><p class="muted small" style="margin-top:6px">Des schémas calculés sur ton historique, avec ce qui se passe dans ton corps et quoi en faire.<button class="help" type="button" data-h="ins" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></p></div><div class="meta" id="insMeta"></div></div>
+  <div class="card"><div class="hd"><h2>Qualité des données<button class="help" type="button" data-h="insData" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="muted small">60 derniers jours</span></div><div class="dqgrid" id="insData"></div></div>
+  <div class="card" id="insAiCard" hidden><div class="hd"><h2>Synthèse par l'IA locale<button class="help" type="button" data-h="insAi" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><button class="btn sm" type="button" id="insAiGo">Rédiger la synthèse</button></div><p class="muted small">L'IA met en mots les enseignements ci-dessous. Elle n'invente pas de chiffres : les cartes font foi.</p><div class="ins-ai" id="insAiOut" hidden></div></div>
+  <div id="insList" class="insgrid"></div>
+  <div class="card" id="insLocked" hidden></div>
 </section>
 
 <!-- RENFO -->
@@ -1073,6 +1104,7 @@ APP.detail=function(slug){
   <div class="card" id="sStrava"></div>
   <div class="card"><div class="hd"><h2>Recommandations${HB("sreco")}</h2><span class="pill line">Règles calculées</span></div><ul class="list" id="sReco">${recoHtml(R)}</ul></div>`;
   APP.curDetail={a,cls,R,recoHtml};
+  if(typeof rpeDetail==="function")rpeDetail(a);
   if(typeof shoeDetail==="function")shoeDetail(a);
   APP.renderStrava();
 };
@@ -1224,7 +1256,7 @@ APP.coach=function(){
 APP.coach();
 APP.lastDs=lastAct.ds;
 if(/^#s-/.test(location.hash))APP.detail(location.hash.slice(3));
-APP.ctx={A,RUNS,last,TSB,cadAvg,P,EST,avg8};if(typeof renderRenfo==="function")renderRenfo();if(typeof renderShoes==="function"){renderShoes();renderPlan()}
+APP.ctx={A,RUNS,last,TSB,cadAvg,P,EST,avg8};if(typeof renderRenfo==="function")renderRenfo();if(typeof renderShoes==="function"){renderShoes();renderPlan()}if(typeof renderIns==="function")renderIns();
 }
 
 /* ---------- interactions (posées une fois) ---------- */
@@ -2308,10 +2340,238 @@ document.addEventListener("click",e=>{let b;
   if(e.target.closest("[data-rtfetch]")&&APP.curDetail){routeFetch(APP.curDetail.a)}
 });
 
-const VIEWS=["synthese","charge","allure","contexte","records","seances","renfo"];
+/* ---------- ressenti par séance ---------- */
+let RPE=lsGet("foulee.rpe.v1",{});
+const BORG=["","Très très facile","Très facile","Facile","Modéré","Un peu dur","Dur","Très dur","Très très dur","Presque maximal","Maximal"];
+const RTAGS=["Bonnes sensations","Jambes lourdes","Souffle court","Crampes","Point de côté","Chaleur","Fringale","Douleur","Mal dormi","Stressé"];
+const RZONES=["","Pied","Cheville","Tendon d'Achille","Mollet","Tibia","Genou","Quadriceps","Ischios","Hanche","Dos","Autre"];
+let RPE_DRAFT=null,RPE_JUST=null;
+async function rpeSet(slug,o){if(DB){if(o)await DB.doc("rpe/"+slug).set(o);else await DB.doc("rpe/"+slug).delete()}else{if(o)RPE[slug]=o;else delete RPE[slug];lsSet("foulee.rpe.v1",RPE)}}
+function rpeDetail(a){
+  const anchor=$("#sStrava");if(!anchor||!a)return;
+  const r=RPE[a.slug]||null,d=RPE_DRAFT&&RPE_DRAFT.slug===a.slug?RPE_DRAFT:Object.assign({slug:a.slug,rpe:null,tags:[],pain:0,zone:"",fuel:null,note:""},r||{});RPE_DRAFT=d;
+  const min=a.s/60,load=d.rpe?Math.round(d.rpe*min):null;
+  anchor.insertAdjacentHTML("beforebegin",`<div class="card" id="sRpe"><div class="hd"><h2>Ton ressenti${HB("rpe")}</h2>${r?`<span class="pill good">Enregistré</span>`:`<span class="pill line">À saisir</span>`}</div>
+  <p class="muted small" style="margin-bottom:10px">Note l'effort tel que tu l'as vécu, idéalement dans les 30 minutes qui suivent. 1 = très très facile, 10 = à bloc.</p>
+  <div class="rpe-scale" role="group" aria-label="Effort perçu de 1 à 10">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="rpe-b" data-rpe="${n}" aria-pressed="${d.rpe===n}" style="--h:${130-n*12}"><b>${n}</b><span>${BORG[n]}</span></button>`).join("")}</div>
+  <div class="row small" style="margin:8px 0 12px;gap:8px"><span class="muted">Charge perçue :</span><strong class="num" id="rpeLoad">${load!=null?load+" UA":"–"}</strong><span class="muted">(note × ${nf(min,0)} min)</span></div>
+  <span class="lab">Sensations</span><div class="chips" style="margin:6px 0 12px">${RTAGS.map(t=>`<button type="button" class="chip" data-rtag="${esc(t)}" aria-pressed="${d.tags.includes(t)}">${t}</button>`).join("")}</div>
+  <div class="row" style="gap:10px;align-items:flex-end">
+    <label class="small muted" style="display:flex;flex-direction:column;gap:4px;width:130px" for="rp-pain">Douleur (0 à 10)<input id="rp-pain" type="number" min="0" max="10" step="1" value="${d.pain||0}"></label>
+    <label class="small muted" style="display:flex;flex-direction:column;gap:4px;min-width:150px" for="rp-zone">Où ?<select id="rp-zone">${RZONES.map(z=>`<option value="${esc(z)}"${d.zone===z?" selected":""}>${z||"Nulle part"}</option>`).join("")}</select></label>
+    ${a.s>=3600?`<label class="small muted" style="display:flex;flex-direction:column;gap:4px;width:150px" for="rp-fuel">Glucides pris (g)<input id="rp-fuel" type="number" min="0" max="400" step="5" placeholder="0" value="${d.fuel??""}"></label>`:""}
+  </div>
+  <label class="small muted" style="display:flex;flex-direction:column;gap:4px;margin-top:10px" for="rp-note">Note libre<textarea id="rp-note" rows="2" placeholder="Ce qui a marché, ce qui a coincé…">${esc(d.note||"")}</textarea></label>
+  <div class="row" style="margin-top:10px;gap:10px"><button class="btn sm" type="button" id="rpSave" data-slug="${a.slug}" data-ds="${a.ds}">Enregistrer</button>${r?`<button class="btn ghost sm" type="button" id="rpDel" data-slug="${a.slug}">Effacer</button>`:""}<span class="muted small" id="rpMsg">${RPE_JUST===a.slug?"Enregistré. Merci, ça nourrit l'onglet Enseignements.":""}</span></div></div>`);
+}
+document.addEventListener("click",async e=>{let b;
+  if(b=e.target.closest("[data-rpe]")){if(!RPE_DRAFT)return;RPE_DRAFT.rpe=+b.dataset.rpe;document.querySelectorAll("[data-rpe]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+    const a=APP.curDetail&&APP.curDetail.a;if(a)$("#rpeLoad").textContent=Math.round(RPE_DRAFT.rpe*a.s/60)+" UA";return}
+  if(b=e.target.closest("[data-rtag]")){if(!RPE_DRAFT)return;const t=b.dataset.rtag,on=RPE_DRAFT.tags.includes(t);RPE_DRAFT.tags=on?RPE_DRAFT.tags.filter(x=>x!==t):RPE_DRAFT.tags.concat(t);b.setAttribute("aria-pressed",String(!on));return}
+  if(b=e.target.closest("#rpSave")){const d=RPE_DRAFT;if(!d||!d.rpe){$("#rpMsg").textContent="Choisis d'abord une note d'effort de 1 à 10.";return}
+    const f=$("#rp-fuel");const o={rpe:d.rpe,tags:d.tags,pain:clamp(+$("#rp-pain").value||0,0,10),zone:$("#rp-zone").value,fuel:f&&f.value!==""?+f.value:null,note:$("#rp-note").value.trim(),ds:b.dataset.ds,at:new Date().toISOString()};
+    RPE_JUST=b.dataset.slug;try{await rpeSet(b.dataset.slug,o);RPE[b.dataset.slug]=o;RPE_DRAFT=null;$("#rpMsg").textContent="Enregistré. Merci, ça nourrit l'onglet Enseignements.";const p=$("#sRpe .hd .pill");if(p){p.className="pill good";p.textContent="Enregistré"}renderIns()}catch(err){$("#rpMsg").textContent="Enregistrement refusé ("+(err.code||"erreur")+")."}return}
+  if(b=e.target.closest("#rpDel")){try{await rpeSet(b.dataset.slug,null);delete RPE[b.dataset.slug];RPE_DRAFT=null;if(APP.curDetail)APP.detail(APP.curDetail.a.slug);renderIns()}catch(err){$("#rpMsg").textContent="Suppression refusée."}}
+});
+
+document.addEventListener("input",e=>{const t=e.target;if(!RPE_DRAFT||!t.id||!/^rp-/.test(t.id))return;const k={"rp-pain":"pain","rp-zone":"zone","rp-note":"note","rp-fuel":"fuel"}[t.id];if(!k)return;RPE_DRAFT[k]=k==="note"||k==="zone"?t.value:t.value===""?null:+t.value;RPE_JUST=null});
+document.addEventListener("change",e=>{const t=e.target;if(RPE_DRAFT&&t.id==="rp-zone"){RPE_DRAFT.zone=t.value;RPE_JUST=null}});
+/* ---------- enseignements ---------- */
+let INS_DETAILS=false,INS_LAST=[];const INS_AI={};
+const aiOn=()=>{try{return!!(HOST.ai&&HOST.ai.url)}catch(e){return false}};
+const LEGW=/jambe|squat|hyrox|fente|lower|cuisse|pliom|plyo/i;
+function insLoadDetails(){
+  if(INS_DETAILS||!DB)return;INS_DETAILS=true;
+  DB.collection("details").get().then(s=>{let n=0;s.docs.forEach(d=>{if(!DETAILS[d.id]){DETAILS[d.id]=JSON.parse(JSON.stringify(d.data()));n++}});if(n)renderIns()}).catch(()=>{INS_DETAILS=false});
+}
+function driftOf(D){const S=D&&D.streams||{},hs=S.heart_rate||[],ts=S.time||[],vs=S.velocity_smooth||[];
+  if(hs.length<=20||vs.length!==hs.length)return null;const T=ts[ts.length-1]||0;if(T<2400)return null;const idx=[];for(let j=0;j<hs.length;j++)if(ts[j]>T*0.1&&vs[j]>1.5&&hs[j]>80)idx.push(j);
+  if(idx.length<=10)return null;const mid=T*0.1+(T*0.9)/2,h1=idx.filter(j=>ts[j]<mid),h2=idx.filter(j=>ts[j]>=mid);if(!h1.length||!h2.length)return null;
+  const ef=g=>mean(g.map(j=>vs[j]))/mean(g.map(j=>hs[j])),e1=ef(h1),e2=ef(h2);
+  const v1=mean(h1.map(j=>vs[j])),v2=mean(h2.map(j=>vs[j]));if(Math.abs(v2/v1-1)>0.08)return null;return(e1-e2)/e1*100}
+const painOf=(ds,slug)=>{const j=LOG.find(e=>e.date===ds),r=slug&&RPE[slug];return Math.max(j&&j.pain||0,j&&j.zone?3:0,r&&r.pain||0)};
+function computeInsights(){
+  const c=APP.ctx;if(!c)return[];const{A,RUNS,last}=c;const out=[];
+  const load=Array(last+1).fill(0);A.forEach(a=>{if(a.i<=last)load[a.i]+=a.re||0});
+  const acwrAt=i=>{const s7=sum(load.slice(Math.max(0,i-6),i+1)),s28=sum(load.slice(Math.max(0,i-27),i+1))/4;return s28?s7/s28:0};
+  /* modèle de coût : effort par km attendu selon la vitesse */
+  const base=RUNS.filter(r=>r.km>=3&&r.re>0);const lr=base.length>=8?linreg(base.map(r=>r.v),base.map(r=>r.re/r.km)):null;
+  const expC=r=>lr?Math.max(0.5,lr.a+lr.b*r.v):median(base.map(x=>x.re/x.km));
+  const ratio=r=>(r.re/r.km)/expC(r);
+  const pct=v=>(v>0?"+":"")+nf(v*100,0)+" %";
+  const add=o=>out.push(Object.assign({level:"info",conf:"Indice",ev:[],act:[],locked:false},o));
+  const lock=(id,title,need,have,unit,how)=>out.push({id,title,locked:true,need,have,unit,how});
+
+  /* 1. efficacité aérobie */
+  {const easy=RUNS.filter(r=>r.z<=1&&r.km>=4&&r.re>0&&r.i>last-150);
+    if(easy.length<6)lock("aero","Ton moteur aérobie progresse-t-il ?",6,easy.length,"footings de 4 km et plus","Cours tes footings vraiment lentement (zones 1-2) avec ta montre cardio.");
+    else{const h=Math.floor(easy.length/2),e1=easy.slice(0,h),e2=easy.slice(-h);
+      const c1=median(e1.map(r=>r.re/r.km)),c2=median(e2.map(r=>r.re/r.km)),p1=median(e1.map(r=>r.p)),p2=median(e2.map(r=>r.p));const dc=c2/c1-1,dp=p2-p1;
+      const better=dc<-0.05&&dp<=5,worse=dc>0.08&&dp>=-5;
+      add({id:"aero",title:"Ton moteur aérobie",level:better?"good":worse?"warn":"line",conf:easy.length>=12?"Solide":"Indice",
+        claim:better?`Tes footings te coûtent ${nf(-dc*100,0)} % d'effort cardiaque en moins par km qu'au début de la période, à une allure ${dp<-3?"plus rapide":"comparable"}. Ton endurance de base s'améliore.`
+          :worse?`Tes footings te coûtent ${nf(dc*100,0)} % d'effort en plus par km qu'au début de la période${dp<-3?", mais tu les cours aussi plus vite":""}. Soit tu accumules de la fatigue, soit tes footings sont courus trop vite.`
+          :`Pas d'évolution nette : le coût de tes footings varie de ${pct(dc)} entre la première et la seconde moitié de la période.`,
+        ev:[["Coût par km",nf(c1,1)+" → "+nf(c2,1)+" pts"],["Allure médiane",pace(p1)+" → "+pace(p2)+"/km"],["Footings comparés",e1.length+" + "+e2.length]],
+        mech:"Courir lentement et souvent pousse le corps à fabriquer plus de mitochondries (les « centrales » des cellules musculaires) et plus de capillaires autour des fibres. Le cœur, lui, éjecte plus de sang à chaque battement. Résultat : à la même allure, il bat moins vite, et l'effort relatif Strava, calculé à partir de ta fréquence cardiaque, baisse. C'est l'indicateur le plus fiable d'un progrès d'endurance, bien avant les chronos.",
+        act:better?["Garde la même proportion de footings lents : c'est elle qui produit ce progrès."]:["Vérifie que tes footings restent plus lents que "+pace(1000/ZSPEED[1])+"/km.","Regarde la fraîcheur (onglet Charge) : une fatigue qui dure fait monter ce coût."]})}}
+
+  /* 2. dérive cardiaque */
+  {const rows=RUNS.filter(r=>r.s>=2400&&DETAILS[r.slug]).map(r=>({r,d:driftOf(DETAILS[r.slug])})).filter(x=>x.d!=null);
+    if(rows.length<3)lock("drift","Ton cœur tient-il la durée ?",3,rows.length,"sorties de 40 min et plus avec le détail Strava chargé","Ouvre tes sorties de plus de 40 min dans Séances et clique « Charger le détail Strava ».");
+    else{const m=median(rows.map(x=>x.d)),hi=rows.filter(x=>x.d>5);
+      add({id:"drift",title:"Ton cœur sur la durée",level:m>5?"warn":"good",conf:rows.length>=6?"Solide":"Indice",
+        claim:m>5?`Sur tes sorties de plus de 40 min, ton cœur dérive de ${nf(m,1)} % en médiane entre la première et la seconde moitié. Au-delà de 5 %, l'endurance limite à ces allures.`:`Dérive médiane de ${nf(m,1)} % sur tes sorties longues : ton cœur reste stable à ces allures.`,
+        ev:rows.slice(-5).map(x=>[fd(x.r.ds)+" · "+nf(x.r.km,1)+" km",(x.d>0?"+":"")+nf(x.d,1)+" %"]),
+        mech:"Quand l'effort dure, une partie du sang part vers la peau pour évacuer la chaleur et tu perds de l'eau en transpirant. Le volume de sang qui revient au cœur diminue, donc il bat plus vite pour garder le même débit. S'y ajoute le recrutement de fibres musculaires moins économes quand les premières fatiguent. Plus l'endurance est développée, plus ce phénomène arrive tard.",
+        act:m>5?["Allonge progressivement une sortie lente par semaine (10 % de plus toutes les 1 à 2 semaines).","Bois régulièrement dès 45 min, surtout par temps chaud."]:["Tu peux introduire de l'allure spécifique dans la seconde moitié des sorties longues."]})}}
+
+  /* 3. pics de charge et douleurs */
+  {const pains=[];RUNS.concat(A.filter(a=>a.t!=="R")).forEach(a=>{const n=(a.note||"")+" "+((RPE[a.slug]||{}).note||"");if(/tibia|douleur|mal\b|bless/i.test(n)||painOf(a.ds,a.slug)>=3)pains.push(a.i)});
+    LOG.forEach(e=>{if(e.pain>=3||e.zone)pains.push(di(e.date))});const P=[...new Set(pains)].filter(i=>i>=28&&i<=last).sort((a,b)=>a-b);
+    if(P.length<2)lock("acwr","Tes douleurs suivent-elles tes pics de charge ?",2,P.length,"épisodes de douleur notés","Note toute douleur (même légère) dans le ressenti de la séance ou le journal, avec la zone.");
+    else{const days=[];for(let i=28;i<=last;i++)days.push(i);const spike=new Set(days.filter(i=>acwrAt(i)>1.3));
+      const after=P.filter(p=>[...Array(10)].some((_,k)=>spike.has(p-k))).length;const base=days.filter(i=>[...Array(10)].some((_,k)=>spike.has(i-k))).length/days.length;
+      const share=after/P.length;
+      add({id:"acwr",title:"Pics de charge et douleurs",level:share>base+0.2?"bad":"line",conf:P.length>=5?"Solide":"Indice",
+        claim:share>base+0.2?`${after} de tes ${P.length} épisodes de douleur sont arrivés dans les 10 jours qui ont suivi un pic de charge (ratio aigu/chronique au-dessus de 1,3). Seuls ${nf(base*100,0)} % des jours de la période sont dans ce cas : le lien est net.`
+          :`${after} épisode(s) de douleur sur ${P.length} ont suivi un pic de charge. Mais ${nf(base*100,0)} % des jours de la période tombent dans une telle fenêtre de 10 jours, donc ce n'est pas plus que ce que le hasard donnerait. Pas de lien marqué pour l'instant.`,
+        ev:P.slice(-4).map(p=>[fd(dsOf(p)),"ratio "+nf(acwrAt(p),2)+" ce jour-là"]),
+        mech:"Ton cœur et tes poumons s'adaptent en quelques semaines. Les os, tendons et fascias, eux, se remodèlent en plusieurs mois. Après une hausse brutale de charge, ces tissus encaissent des micro-lésions plus vite qu'ils ne les réparent. La douleur apparaît souvent avec quelques jours de retard, d'où cette fenêtre de 10 jours. Le tibia est la zone typique chez les coureurs qui augmentent vite leur volume.",
+        act:["Garde le ratio aigu/chronique entre 0,8 et 1,3 (onglet Charge).","Augmente ton volume de 10 % par semaine au maximum, avec une semaine allégée toutes les 3 à 4 semaines."]})}}
+
+  /* 4. sommeil */
+  {const pairs=[];LOG.filter(x=>x.sleep!=null).forEach(x=>{const i=di(x.date);const r=RUNS.find(q=>(q.i===i||q.i===i+1)&&q.km>=4&&q.re>0);if(r)pairs.push({s:x.sleep,c:ratio(r),r})});
+    if(pairs.length<8)lock("sleep","Le sommeil change-t-il le coût de tes sorties ?",8,pairs.length,"nuits notées suivies d'une sortie","Note ton sommeil chaque matin dans le journal (onglet Contexte).");
+    else{const lo=pairs.filter(p=>p.s<7),hi=pairs.filter(p=>p.s>=7);
+      if(lo.length<3||hi.length<3)lock("sleep","Le sommeil change-t-il le coût de tes sorties ?",3,Math.min(lo.length,hi.length),"nuits de chaque type (moins de 7 h et 7 h ou plus)","Il faut des nuits courtes et des nuits longues pour comparer.");
+      else{const d=mean(lo.map(p=>p.c))/mean(hi.map(p=>p.c))-1;
+        add({id:"sleep",title:"Sommeil et coût de l'effort",level:d>0.08?"warn":"line",conf:pairs.length>=16?"Solide":"Indice",
+          claim:d>0.05?`Après une nuit de moins de 7 h, tes sorties te coûtent ${pct(d)} d'effort cardiaque à allure égale.`:`Pas d'écart net entre tes sorties après une nuit courte ou longue (${pct(d)}).`,
+          ev:[["Nuits < 7 h",lo.length+" sorties"],["Nuits ≥ 7 h",hi.length+" sorties"]],
+          mech:"Une nuit courte laisse le système nerveux sympathique (celui du stress) plus actif : la fréquence cardiaque de repos et d'effort monte. Les réserves de glycogène se reconstituent moins bien et l'effort paraît plus dur à intensité égale. Les hormones de réparation, sécrétées surtout en début de nuit, sont aussi réduites.",
+          act:d>0.05?["Les jours qui suivent une nuit courte, transforme la séance de qualité en footing.","Vise 7 h 30 à 8 h les deux nuits qui précèdent une séance clé."]:["Continue à noter ton sommeil : l'écart peut apparaître avec plus de données."]})}}}
+
+  /* 5. renfo jambes la veille */
+  {const rs=RUNS.filter(r=>r.km>=4&&r.re>0);const leg=rs.filter(r=>A.some(x=>x.i===r.i-1&&x.t==="W"&&LEGW.test(x.name))),no=rs.filter(r=>!leg.includes(r)&&!A.some(x=>x.i===r.i-1&&x.t==="W"));
+    if(leg.length<3)lock("legs","Le renfo jambes de la veille te pénalise-t-il ?",3,leg.length,"sorties le lendemain d'un renfo jambes","Garde des noms explicites pour tes séances de renfo sur Strava (« jambes », « squat », « Hyrox »).");
+    else{const d=mean(leg.map(ratio))/mean(no.map(ratio))-1;
+      add({id:"legs",title:"Renfo jambes la veille",level:d>0.06?"warn":"good",conf:leg.length>=6?"Solide":"Indice",
+        claim:d>0.04?`Le lendemain d'un renfo jambes, tes sorties te coûtent ${pct(d)} d'effort à allure égale.`:`Le renfo jambes de la veille ne change pas nettement le coût de tes sorties (${pct(d)}).`,
+        ev:[["Après renfo jambes",leg.length+" sorties"],["Sans renfo la veille",no.length+" sorties"]],
+        mech:"Squats, fentes et sauts créent des micro-lésions dans les fibres, surtout en phase excentrique (quand le muscle freine). Pendant 24 à 72 h, le muscle est moins raide et moins réactif : chaque foulée renvoie moins d'énergie élastique et demande plus d'effort pour la même vitesse.",
+        act:d>0.04?["Place le renfo jambes le même jour qu'une séance de qualité (après), ou 48 h avant.","La veille d'une séance clé, garde un renfo haut du corps ou gainage."]:["Ton organisation actuelle convient : rien à changer."]})}}
+
+  /* 6. chaleur */
+  {const hot=RUNS.filter(r=>r.tmp!=null&&r.km>=5&&r.re>0);
+    if(hot.length<8)lock("heat","La chaleur te coûte-t-elle cher ?",8,hot.length,"sorties de 5 km et plus avec météo","La météo vient de Strava, rien à saisir.");
+    else{const g=linreg(hot.map(r=>r.tmp),hot.map(ratio)),per5=g.b*5,rr=pearson(hot.map(r=>r.tmp),hot.map(ratio));
+      add({id:"heat",title:"Chaleur",level:per5>0.05?"warn":"line",conf:hot.length>=16&&Math.abs(rr)>0.3?"Solide":"Indice",
+        claim:per5>0.03?`Chaque tranche de 5 °C en plus augmente ton coût d'effort d'environ ${pct(per5)} à allure égale.`:`La température change peu ton coût d'effort sur tes sorties (${pct(per5)} par tranche de 5 °C).`,
+        ev:[["Sorties analysées",String(hot.length)],["Température",nf(Math.min(...hot.map(r=>r.tmp)),0)+" à "+nf(Math.max(...hot.map(r=>r.tmp)),0)+" °C"],["Corrélation",nf(rr,2)]],
+        mech:"Pour te refroidir, ton corps envoie du sang vers la peau, et ce sang n'est plus disponible pour les muscles. Tu transpires, ton volume sanguin baisse, et le cœur compense en battant plus vite. Le corps s'acclimate en 10 à 14 jours d'exposition régulière.",
+        act:["Au-delà de 22 °C, cale-toi sur la fréquence cardiaque plutôt que sur l'allure.","Avant une course au chaud, fais quelques sorties faciles aux heures chaudes pendant les deux semaines précédentes."]})}}
+
+  /* 7. 80/20 */
+  {const R8=RUNS.filter(r=>r.i>last-56),zt=Array(6).fill(0);R8.forEach(r=>zt[r.z]+=r.s);const tot=sum(zt);
+    if(tot>0){const easy=(zt[0]+zt[1])/tot,mid=(zt[2]+zt[3])/tot,hard=(zt[4]+zt[5])/tot;
+      add({id:"polar",title:"Répartition des intensités",level:easy>=0.75?"good":easy>=0.6?"warn":"bad",conf:R8.length>=12?"Solide":"Indice",
+        claim:easy>=0.75?`${nf(easy*100,0)} % de ton temps de course est en zones faciles sur 8 semaines : bonne base.`:`Seulement ${nf(easy*100,0)} % de ton temps de course est en zones faciles sur 8 semaines, et ${nf(mid*100,0)} % en zone moyenne (tempo, seuil). Les coureurs qui progressent le plus sont plutôt autour de 80 % en facile.`,
+        ev:[["Facile (Z1-Z2)",nf(easy*100,0)+" %"],["Moyen (Z3-Z4)",nf(mid*100,0)+" %"],["Dur (Z5-Z6)",nf(hard*100,0)+" %"]],
+        mech:"Le volume lent construit l'endurance (mitochondries, capillaires, cœur) en fatiguant peu. Les séances dures, peu nombreuses, développent la vitesse et la VMA. La zone moyenne, entre les deux, fatigue presque autant qu'une séance dure sans en donner tous les effets, et si elle remplace les footings, tu accumules de la fatigue sans construire le fond. Classement basé sur ton allure moyenne de chaque sortie, ce qui sous-estime un peu le temps passé en zones dures pendant les fractionnés.",
+        act:easy>=0.75?["Garde ce dosage."]:["Ralentis tes footings : plus lents que "+pace(1000/ZSPEED[1])+"/km, même si ça paraît trop facile.","Garde 1 à 2 séances vraiment dures par semaine, pas plus."]})}}
+
+  /* 8. sorties longues et crampes */
+  {const cr=RUNS.filter(r=>/crampe/i.test((r.note||"")+" "+((RPE[r.slug]||{}).tags||[]).join(" ")+" "+((RPE[r.slug]||{}).note||"")));
+    if(!cr.length)lock("cramp","D'où viennent tes crampes ?",1,0,"sortie avec crampes notée","Ajoute le tag « Crampes » dans le ressenti si ça arrive.");
+    else{const rows=cr.slice(-3).map(r=>{const prev=RUNS.filter(x=>x.i<r.i&&x.i>=r.i-42&&x!==r);const lg=prev.length?Math.max(...prev.map(x=>x.s)):0;return{r,lg,ratio:lg?r.s/lg:null}});
+      const k=rows[rows.length-1];
+      add({id:"cramp",title:"Crampes et durée d'effort",level:"bad",conf:cr.length>=3?"Solide":"Indice",
+        claim:rows.length>1&&rows.some(x=>x.ratio>1.25)&&!(k.ratio>1.25)?`Sur tes ${rows.length} dernières sorties avec crampes, ${rows.filter(x=>x.ratio>1.25).length} ${rows.filter(x=>x.ratio>1.25).length>1?"dépassaient":"dépassait"} nettement ta plus longue sortie des 6 semaines précédentes. La dernière (${fd(k.r.ds)}, ${dur(k.r.s)}) non : là, regarde plutôt l'allure de départ, la chaleur et le ravitaillement.`:k.ratio&&k.ratio>1.25?`Ta dernière sortie avec crampes (${fd(k.r.ds)}) a duré ${dur(k.r.s)}, soit ${nf(k.ratio,1)} fois ta plus longue sortie des 6 semaines précédentes (${dur(k.lg)}). Tes muscles n'étaient pas habitués à cette durée.`:`Crampes notées sur ${cr.length} sortie(s). La dernière ne dépassait pas nettement tes plus longues sorties récentes : regarde plutôt l'allure, la chaleur et le ravitaillement.`,
+        ev:rows.map(x=>[fd(x.r.ds)+" · "+nf(x.r.km,1)+" km",dur(x.r.s)+(x.lg?" (plus longue avant : "+dur(x.lg)+")":"")]),
+        mech:"Les études récentes montrent que la plupart des crampes d'effort viennent d'abord d'une fatigue neuromusculaire : quand un muscle travaille plus longtemps ou plus fort que d'habitude, le signal qui l'excite prend le dessus sur celui qui le freine, et il se contracte tout seul. La déshydratation et le manque de sodium aggravent le phénomène, mais à eux seuls ils l'expliquent mal. C'est pour ça que les crampes surviennent souvent à une distance précise, au-delà de ce que tu as l'habitude de courir.",
+        act:["Monte ta sortie longue jusqu'à au moins 75 % de la durée visée en course, sur plusieurs semaines.","En course, pars plus lentement que l'allure cible les 5 premiers km.","Au-delà de 75 min, prends 30 à 60 g de glucides par heure (note-les dans le ressenti pour suivre l'effet)."]})}}
+
+  /* 9. ressenti vs cardio */
+  {const rr=RUNS.filter(r=>RPE[r.slug]&&RPE[r.slug].rpe&&r.re>0);
+    if(rr.length<6)lock("rpe","Ton ressenti colle-t-il à ton cardio ?",6,rr.length,"séances avec un ressenti noté","Remplis « Ton ressenti » dans la fiche de chaque séance.");
+    else{const sr=rr.map(r=>RPE[r.slug].rpe*r.s/60),hr=rr.map(r=>r.re),cor=pearson(sr,hr),k=median(rr.map((r,j)=>sr[j]/hr[j]));
+      const lastR=rr.slice(-3),off=lastR.filter((r,j)=>(RPE[r.slug].rpe*r.s/60)/r.re>k*1.3);
+      add({id:"rpe",title:"Ressenti et cardio",level:off.length>=2?"warn":"good",conf:rr.length>=12?"Solide":"Indice",
+        claim:off.length>=2?`Sur tes 3 dernières séances notées, ${off.length} t'ont paru bien plus dures que ce que dit ton cœur (+30 % ou plus par rapport à ton rapport habituel). C'est souvent un signe de fatigue qui ne se voit pas encore dans les chiffres.`:`Ton ressenti suit bien ta charge cardiaque (corrélation ${nf(cor,2)} sur ${rr.length} séances).`,
+        ev:[["Séances notées",String(rr.length)],["Corrélation ressenti / cardio",nf(cor,2)]],
+        mech:"La fréquence cardiaque mesure l'effort du cœur. Le ressenti, lui, intègre aussi la fatigue du cerveau, le niveau de glycogène, le sommeil et le stress. Quand l'effort paraît plus dur que ce que montre le cœur, c'est souvent la fatigue centrale ou les réserves d'énergie qui parlent. Ce décalage précède souvent une baisse de forme de quelques jours.",
+        act:off.length>=2?["Allège les 2-3 prochains jours : footings courts et lents.","Vérifie sommeil et alimentation dans le journal."]:["Continue à noter : plus tu as de séances, plus ce signal devient fiable."]})}}
+
+  /* 10. FC de repos */
+  {const rh=LOG.filter(e=>e.rhr>0).sort((a,b)=>a.date.localeCompare(b.date));
+    if(rh.length<10)lock("rhr","Ta fréquence cardiaque de repos t'alerte-t-elle ?",10,rh.length,"mesures de FC au repos","Prends ta FC au réveil, allongé, avant de te lever, et note-la dans le journal.");
+    else{const lastE=rh[rh.length-1],basel=median(rh.slice(-15,-1).map(e=>e.rhr)),d=lastE.rhr-basel;
+      add({id:"rhr",title:"FC de repos",level:d>=5?"warn":"good",conf:rh.length>=20?"Solide":"Indice",
+        claim:d>=5?`Ta FC de repos du ${fd(lastE.date)} (${lastE.rhr}) dépasse de ${nf(d,0)} bpm ta médiane récente (${nf(basel,0)}).`:`FC de repos stable : ${lastE.rhr} bpm le ${fd(lastE.date)}, médiane récente ${nf(basel,0)}.`,
+        ev:rh.slice(-5).map(e=>[fd(e.date),e.rhr+" bpm"]),
+        mech:"Au repos, ton cœur est freiné par le système parasympathique (celui de la récupération). Fatigue, début d'infection, manque de sommeil, alcool ou stress lèvent ce frein : la FC du matin monte. Une hausse de 5 bpm ou plus sur ta valeur habituelle signale souvent que le corps n'a pas récupéré.",
+        act:d>=5?["Remplace la séance dure du jour par un footing léger ou du repos.","Si la hausse dure plus de 3 jours, ou s'accompagne de fièvre, ne t'entraîne pas."]:["Rien à changer."]})}}
+
+  /* 11. nutrition */
+  {const nu=LOG.filter(e=>e.kcal>0||e.prot>0).filter(e=>di(e.date)>last-30);
+    if(nu.length<7)lock("food","Manges-tu assez pour ta charge ?",7,nu.length,"jours d'alimentation notés sur 30 jours","Note calories et protéines dans le journal, même approximativement.");
+    else{const k=nu.filter(e=>e.kcal>0).map(e=>e.kcal),p=nu.filter(e=>e.prot>0).map(e=>e.prot);const mk=k.length?mean(k):null,mp=p.length?mean(p):null;
+      const low=(mk&&mk<2800*0.85)||(mp&&mp<156*0.85);
+      add({id:"food",title:"Apport énergétique",level:low?"warn":"good",conf:nu.length>=14?"Solide":"Indice",
+        claim:low?`Sur 30 jours, ta moyenne est de ${mk?nf(mk,0)+" kcal":"–"} et ${mp?nf(mp,0)+" g de protéines":"–"} par jour, sous tes cibles (2 800 kcal, 156 g).`:`Sur 30 jours, tu es proche de tes cibles : ${mk?nf(mk,0)+" kcal":"–"}, ${mp?nf(mp,0)+" g de protéines":"–"} par jour.`,
+        ev:[["Jours notés",String(nu.length)],["Calories",mk?nf(mk,0):"–"],["Protéines",mp?nf(mp,0)+" g":"–"]],
+        mech:"L'entraînement crée des dégâts que le corps répare avec l'énergie et les protéines disponibles. Si l'apport est trop bas par rapport à la dépense, le corps économise : récupération plus lente, os moins bien entretenus, hormones perturbées. Ce déficit chronique fait partie des causes de fractures de fatigue chez les coureurs.",
+        act:low?["Ajoute une collation glucides + protéines dans l'heure qui suit les séances.","Les jours de grosse séance, augmente surtout les glucides."]:["Garde ce niveau, surtout pendant les semaines chargées."]})}}
+
+  INS_LAST=out;return out;
+}
+const INS_DATA=()=>{const c=APP.ctx;if(!c)return[];const{RUNS,last}=c;const r60=RUNS.filter(r=>r.i>last-60),long=r60.filter(r=>r.s>=2400);const days=[...Array(60)].map((_,k)=>dsOf(last-k));
+  const jr=d=>LOG.find(e=>e.date===d);
+  return[["Ressenti noté",r60.filter(r=>RPE[r.slug]&&RPE[r.slug].rpe).length,r60.length,"séances de course","Fiche de chaque séance"],
+    ["Sommeil",days.filter(d=>(jr(d)||{}).sleep!=null).length,60,"jours","Journal (Contexte)"],
+    ["FC de repos",days.filter(d=>(jr(d)||{}).rhr>0).length,60,"jours","Journal (Contexte)"],
+    ["Alimentation",days.filter(d=>{const e=jr(d)||{};return e.kcal>0||e.prot>0}).length,60,"jours","Journal (Contexte)"],
+    ["Détail Strava",long.filter(r=>DETAILS[r.slug]).length,long.length,"sorties de 40 min et plus","Bouton dans la fiche séance"]]};
+function insText(x){return`${x.title} [${x.conf}] : ${x.claim} Données : ${x.ev.map(e=>e[0]+" "+e[1]).join(" ; ")}.`}
+function insSummary(){const L=(INS_LAST.length?INS_LAST:computeInsights()).filter(x=>!x.locked);return L.length?L.map(insText).join("\n"):"aucun enseignement calculé"}
+function renderIns(){
+  const box=$("#insList");if(!box||!APP.ctx)return;
+  if(location.hash==="#enseignements")insLoadDetails();
+  const L=computeInsights(),ok=L.filter(x=>!x.locked),lk=L.filter(x=>x.locked),ai=aiOn();
+  const order={bad:0,warn:1,good:2,line:3,info:3};ok.sort((a,b)=>order[a.level]-order[b.level]);
+  const lv={bad:"À surveiller",warn:"À ajuster",good:"Positif",line:"Neutre",info:"Info"};
+  $("#insMeta").innerHTML=`<span class="pill line">${ok.length} enseignement(s)</span>${lk.length?`<span class="pill line">${lk.length} à débloquer</span>`:""}`;
+  const dq=INS_DATA();
+  $("#insData").innerHTML=dq.map(([lab,n,t,u,w])=>{const p=t?n/t:0;return`<div class="dq"><div class="row" style="justify-content:space-between"><strong>${lab}</strong><span class="num small">${n}/${t}</span></div><div class="track"><span style="width:${p*100}%;background:${p>=0.6?"var(--good)":p>=0.25?"var(--warn)":"var(--bad)"}"></span></div><span class="muted small">${u} · ${w}</span></div>`}).join("");
+  $("#insAiCard").hidden=!ai;
+  box.innerHTML=ok.map(x=>`<article class="card ins ins-${x.level}" id="ins-${x.id}"><div class="hd"><h2>${x.title}</h2><div class="row" style="gap:6px"><span class="pill ${x.level==="line"?"line":x.level}">${lv[x.level]}</span><span class="pill line" title="Solide : assez de données pour s'y fier. Indice : tendance à confirmer.">${x.conf}</span></div></div>
+    <p class="ins-claim">${x.claim}</p>
+    ${x.ev.length?`<div class="ins-ev">${x.ev.map(e=>`<div><span class="lab">${e[0]}</span><b class="num">${e[1]}</b></div>`).join("")}</div>`:""}
+    <details class="ins-why"><summary>Pourquoi ça se passe comme ça</summary><p>${x.mech}</p></details>
+    ${x.act.length?`<ul class="ins-act">${x.act.map(a=>`<li>${a}</li>`).join("")}</ul>`:""}
+    ${ai?`<div class="row" style="margin-top:10px"><button class="btn ghost sm" type="button" data-insai="${x.id}">Demander à l'IA</button></div><div class="ins-ai" id="insai-${x.id}"${INS_AI[x.id]?"":" hidden"}>${INS_AI[x.id]?esc(INS_AI[x.id]):""}</div>`:""}</article>`).join("")||`<div class="card"><p class="muted">Pas encore assez de données pour tirer des enseignements.</p></div>`;
+  $("#insLocked").innerHTML=lk.length?`<div class="hd"><h2>À débloquer${HB("insLock")}</h2><span class="muted small">Ce qu'il manque pour aller plus loin</span></div><ul class="list">${lk.map(x=>`<li><span class="pill line">${Math.min(x.have,x.need)}/${x.need}</span><div><strong>${x.title}</strong><br><span class="muted small">Il faut ${x.need} ${x.unit}. ${x.how}</span></div></li>`).join("")}</ul>`:"";
+  $("#insLocked").hidden=!lk.length;
+}
+document.addEventListener("click",async e=>{let b;
+  if(b=e.target.closest("[data-insai]")){const x=INS_LAST.find(i=>i.id===b.dataset.insai);if(!x)return;const out=$("#insai-"+x.id);out.hidden=false;out.textContent="L'IA locale réfléchit…";b.disabled=true;
+    try{INS_AI[x.id]=await aiAsk("Explique-moi cet enseignement avec mes chiffres, puis dis-moi concrètement quoi faire cette semaine. 6 phrases maximum.",insText(x)+"\nMécanisme : "+x.mech);out.textContent=INS_AI[x.id]}catch(err){out.textContent=err.message}b.disabled=false;return}
+  if(b=e.target.closest("#insAiGo")){const out=$("#insAiOut");out.hidden=false;out.textContent="L'IA locale réfléchit…";b.disabled=true;
+    try{out.textContent=await aiAsk("Fais-moi le point de mes enseignements : ce qui va bien, les 2 priorités à changer, et pourquoi. 10 phrases maximum, sans liste à rallonge.")}catch(err){out.textContent=err.message}b.disabled=false}
+});
+const INS_HELP={
+ins:["Enseignements",`<p>Ici, l'appli croise tes données (séances, journal, ressenti, météo, détail Strava) pour repérer ce qui se répète chez toi : est-ce que le sommeil change tes sorties, si tes douleurs suivent tes pics de charge, si ton endurance progresse…</p><p>Chaque carte donne le constat avec tes chiffres, le mécanisme physiologique derrière, et quoi faire.</p><p><b>Solide</b> : assez de données pour s'y fier. <b>Indice</b> : tendance à confirmer. Ce sont des corrélations : elles orientent, elles ne prouvent pas une cause.</p>`],
+insData:["Qualité des données",`<p>Plus tu renseignes de choses, plus les enseignements sont fiables et nombreux. Ces barres montrent ce qui est saisi sur les 60 derniers jours.</p><p>Le plus utile, par ordre : le <b>ressenti</b> après chaque séance (30 secondes), le <b>sommeil</b> et la <b>FC au réveil</b>.</p>`],
+insLock:["À débloquer",`<p>Ces analyses existent déjà mais attendent plus de données. Le compteur montre où tu en es.</p>`],
+insAi:["Synthèse par l'IA",`<p>L'IA locale reçoit les enseignements calculés ci-dessous et tes dernières séances, et les met en mots. Elle ne calcule rien elle-même : si un chiffre n'est pas dans les données, elle doit le dire.</p><p>Relis toujours avec les cartes : ce sont elles qui font foi.</p>`],
+rpe:["Ton ressenti",`<p>L'<b>effort perçu</b> (échelle de Borg, de 1 à 10) est la note que tu donnes à la difficulté de la séance. C'est une mesure utilisée par les entraîneurs depuis des décennies et elle est étonnamment fiable.</p><p>La <b>charge perçue</b> = note × durée en minutes (méthode de Foster). Une sortie de 40 min notée 4 vaut 160 UA.</p><p>Comparée à ta fréquence cardiaque, elle révèle la fatigue que le cœur ne montre pas encore. Les sensations, la douleur et les glucides pris servent aux enseignements (crampes, blessures).</p>`]
+};
+
+const VIEWS=["synthese","charge","allure","contexte","records","seances","renfo","enseignements"];
 function route(){const h=location.hash.slice(1);const det=/^s-[0-9A-Za-z-]+$/.test(h);const v=det?"seances":VIEWS.includes(h)?h:"synthese";VIEWS.forEach(n=>$("#v-"+n).hidden=n!==v);$("#sList").hidden=det;$("#sDetail").hidden=!det;
   if(det){APP.detail(h.slice(2));if(APP.curDetail&&APP.curDetail.a.slug===h.slice(2))loadDetail(APP.curDetail.a)}else APP.curDetail=null;document.querySelectorAll(".tabs a").forEach(a=>a.getAttribute("href")==="#"+v?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current"))}
-window.addEventListener("hashchange",()=>{route();window.scrollTo(0,0)});
+window.addEventListener("hashchange",()=>{route();if(location.hash==="#enseignements")renderIns();window.scrollTo(0,0)});
 
 render();route();
 
@@ -2431,7 +2691,7 @@ const hpop=document.createElement("div");hpop.className="hpop";hpop.id="hpop";hp
 let hOpenBtn=null;
 function closeHelp(){if(hpop.hidden)return;hpop.hidden=true;if(hOpenBtn){hOpenBtn.setAttribute("aria-expanded","false");hOpenBtn.focus({preventScroll:true})}hOpenBtn=null}
 function openHelp(btn){
-  const h=HELP[btn.dataset.h]||RF_HELP[btn.dataset.h]||EXT_HELP[btn.dataset.h];if(!h)return;
+  const h=HELP[btn.dataset.h]||RF_HELP[btn.dataset.h]||EXT_HELP[btn.dataset.h]||INS_HELP[btn.dataset.h];if(!h)return;
   if(hOpenBtn===btn){closeHelp();return}
   hpop.innerHTML=`<div class="row" style="justify-content:space-between;align-items:flex-start;margin-bottom:8px"><h3>${h[0]}</h3><button class="chip" type="button" id="hClose">Fermer</button></div>${h[1]}`;
   hpop.setAttribute("aria-label",h[0]);hpop.hidden=false;hOpenBtn=btn;btn.setAttribute("aria-expanded","true");
@@ -2522,13 +2782,13 @@ async function stravaReturn(){
   catch(e){settingsMsg(`<span class="pill bad">Échec de la connexion Strava</span> ${esc(workerHint(e))}`)}
 }
 /* --- IA locale (Ollama ou compatible) --- */
-async function aiAsk(question){
+async function aiAsk(question,extra){
   const ai=HOST.ai;if(!ai||!ai.url)throw new Error("IA locale non configurée (réglages ⚙).");
-  const c=APP.ctx;const runs=c.RUNS.slice(-12).map(r=>`${r.ds} ${r.name} : ${nf(r.km,1)} km à ${pace(r.p)}/km, effort ${r.re}${r.note?" — note : "+r.note:""}`).join("\n");
+  const c=APP.ctx;const runs=c.RUNS.slice(-12).map(r=>`${r.ds} ${r.name} : ${nf(r.km,1)} km à ${pace(r.p)}/km, effort ${r.re}${r.note?" — note : "+r.note:""}${RPE[r.slug]&&RPE[r.slug].rpe?" — ressenti "+RPE[r.slug].rpe+"/10"+(RPE[r.slug].tags&&RPE[r.slug].tags.length?" ("+RPE[r.slug].tags.join(", ")+")":""):""}`).join("\n");
   const est=c.EST.map(e=>`${e.lab} ${e.now?durHMS(e.now.t):"–"}`).join(", ");
   const jr=LOG.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,7).map(e=>`${e.date} : sommeil ${e.sleep??"?"} h, douleur ${e.pain??"–"} ${e.zone||""}, note ${e.note||""}`).join("\n");
-  const sys="Tu es un entraîneur de course à pied. Réponds en français, de façon concise et concrète, uniquement à partir des données fournies. Si une donnée manque, dis-le. Tu ne poses pas de diagnostic médical.";
-  const data=`Estimations actuelles : ${est}\nVolume moyen 8 semaines : ${nf(c.avg8,0)} km/sem\nFraîcheur (TSB) : ${nf(c.TSB[c.last],0)}\nProfil /10 : ${Object.entries(c.P).map(([k,v])=>k+" "+v).join(", ")}\n12 dernières sorties :\n${runs}\nJournal récent :\n${jr||"vide"}`;
+  const sys="Tu es un entraîneur de course à pied. Réponds en français, de façon concise et concrète, uniquement à partir des données fournies. N'invente aucun chiffre : reprends seulement ceux qui sont donnés. Les « enseignements calculés » sont des analyses faites par l'application sur l'historique ; appuie-toi dessus en priorité, explique les mécanismes physiologiques simplement, et précise quand un enseignement n'est qu'un indice (peu de données). Si une donnée manque, dis-le. Tu ne poses pas de diagnostic médical.";
+  const data=`Estimations actuelles : ${est}\nVolume moyen 8 semaines : ${nf(c.avg8,0)} km/sem\nFraîcheur (TSB) : ${nf(c.TSB[c.last],0)}\nProfil /10 : ${Object.entries(c.P).map(([k,v])=>k+" "+v).join(", ")}\n12 dernières sorties :\n${runs}\nJournal récent :\n${jr||"vide"}\nEnseignements calculés :\n${insSummary()}${extra?"\n\nEnseignement concerné :\n"+extra:""}`;
   const r=await fetch(ai.url.replace(/\/$/,"")+"/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:ai.model,stream:false,messages:[{role:"system",content:sys},{role:"user",content:data+"\n\nQuestion : "+question}]})});
   if(!r.ok)throw new Error("Le serveur IA a répondu "+r.status);const j=await r.json();return(j.message&&j.message.content)||j.response||"";
 }
@@ -2575,7 +2835,7 @@ document.addEventListener("click",async e=>{const t=e.target;
   if(t.closest("#setStrava")){stravaAuthorize();return}
   if(t.closest("#setTestW")){settingsMsg("Test du Worker…");const r=await testWorker();settingsMsg(r==="ok"?`<span class="pill good">Worker OK</span> Il répond et reconnaît ta connexion. Tu peux connecter Strava.`:`<span class="pill bad">Worker en erreur</span> ${esc(r)}`);return}
   if(t.closest("#setStravaOff")){HOST.strava=null;MCP=null;await DB.doc("private/strava").delete();logEvent("Strava déconnecté");renderSettings();return}
-  if(t.closest("#aiSave")){HOST.ai={url:$("#aiUrl").value.trim(),model:$("#aiModel").value.trim()};await DB.doc("settings/ai").set(HOST.ai);
+  if(t.closest("#aiSave")){HOST.ai={url:$("#aiUrl").value.trim(),model:$("#aiModel").value.trim()};await DB.doc("settings/ai").set(HOST.ai);renderIns();
     try{const r=await fetch(HOST.ai.url.replace(/\/$/,"")+"/api/tags");const j=await r.json();const ms=(j.models||[]).map(m=>m.name);settingsMsg(`<span class="pill good">Serveur joignable</span> Modèles : ${esc(ms.join(", ")||"aucun")}${HOST.ai.model&&!ms.includes(HOST.ai.model)?" · le modèle indiqué n'est pas installé.":""}`)}
     catch(err){settingsMsg(`<span class="pill bad">Injoignable</span> Vérifie que le serveur tourne et que l'adresse de Foulée est autorisée (variable OLLAMA_ORIGINS).`)}return}
   if(t.closest("#expBtn")){try{await exportAll()}catch(err){settingsMsg("Export impossible : "+esc(err.message||err.code))}return}
@@ -2599,11 +2859,12 @@ $("#lgReset").addEventListener("click",async()=>{const em=$("#lg-email").value.t
     let t=null;const soon=()=>{clearTimeout(t);t=setTimeout(render,60)};
     DB.collection("activities").onSnapshot(s=>{EXTRA=s.docs.map(d=>Object.assign({src:"strava"},d.data()));soon()},()=>{});
     DB.collection("journal").onSnapshot(s=>{LOG=s.docs.map(d=>d.data());soon()},()=>{});
+    DB.collection("rpe").onSnapshot(s=>{RPE={};s.docs.forEach(d=>RPE[d.id]=Object.assign({},d.data()));soon()},()=>{});
     rfAttach(DB);extAttach(DB);
     DB.doc("races/next").onSnapshot(s=>{NEXT=s.exists?s.data():null;soon()},()=>{});
     try{const s=await DB.doc("private/strava").get();if(s.exists){HOST.strava=s.data();MCP=STRAVA_SHIM}}catch(e){}
     try{const s=await DB.doc("settings/ai").get();if(s.exists)HOST.ai=s.data()}catch(e){}
-    if(HOST.ai&&HOST.ai.url)$("#aiBox").hidden=false;
+    if(HOST.ai&&HOST.ai.url){$("#aiBox").hidden=false;renderIns()}
     await stravaReturn();
     if(MCP&&APP.curDetail)loadDetail(APP.curDetail.a);
   });
