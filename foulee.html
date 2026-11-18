@@ -595,6 +595,19 @@ body.lock{overflow:hidden}
 .rfnew .chk{display:flex;align-items:center;gap:10px;font-size:14px}
 .rfnew .chk input{width:20px;height:20px;accent-color:var(--accent)}
 @media (max-width:480px){.shoe{grid-template-columns:84px minmax(0,1fr);gap:12px;padding:12px}.shoe .shphoto{width:84px;height:66px}.shoe .big{font-size:19px!important}}
+.wxnow{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:8px 18px;align-items:center}
+.wxic{color:var(--accent);display:grid;place-items:center}
+.wxt{font-size:52px;font-weight:600;line-height:1;letter-spacing:-.03em}
+.wxstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px 16px}
+.wxstats>div{display:flex;flex-direction:column;gap:1px}.wxstats b{font-size:15px;font-weight:600}
+.wxhours{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;margin-top:14px}
+.wxh{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;border-radius:12px;background:var(--sunk);color:var(--ink)}
+.wxh svg{color:var(--muted)}.wxh b{font-size:15px}.wxrain{color:var(--sky-ink);font-weight:600}
+.wxbest{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+@media (max-width:640px){.wxnow{grid-template-columns:auto 1fr}.wxstats{grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr))}.wxhours{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.liblist{max-height:none!important;overflow:visible!important}
+.more{display:flex;justify-content:center;margin-top:10px}.more:empty{display:none}
+.secsep{padding:14px 2px 0;border-top:.5px solid var(--line);margin-top:6px}
 .wchip.once{box-shadow:inset 0 0 0 1px var(--lift);background:transparent;border-style:dashed}
 .hpop{z-index:100;border:0;border-radius:var(--r-s)}
 .coach .body{flex:1 1 auto;min-height:0}
@@ -605,7 +618,7 @@ body.lock{overflow:hidden}
   <div class="bar-app pad">
     <div class="brand"><span class="logo">F</span>Foulée <small>· suivi course à pied</small></div>
     <nav class="tabs" aria-label="Vues">
-      <a href="#synthese">Synthèse</a><a href="#charge">Charge</a><a href="#allure">Allure</a><a href="#contexte">Contexte</a><a href="#records">Records</a><a href="#seances">Séances</a><a href="#renfo">Renfo</a><a href="#enseignements">Enseignements</a>
+      <a href="#synthese">Synthèse</a><a href="#charge">Charge</a><a href="#allure">Allure &amp; records</a><a href="#contexte">Contexte</a><a href="#seances">Séances</a><a href="#renfo">Renfo</a><a href="#enseignements">Enseignements</a>
     </nav>
     <div class="me"><button class="btn sm ghost" type="button" id="setBtn" aria-label="Réglages" title="Réglages">⚙</button><button class="btn sm" type="button" id="majBtn" aria-expanded="false" aria-controls="majPop"><span class="sync" aria-hidden="true"></span>MAJ</button><span class="ver">v1.0</span><span class="avatar" title="Arthur">A</span></div>
   </div>
@@ -624,8 +637,7 @@ body.lock{overflow:hidden}
 <div class="sheet" id="moreSheet" role="dialog" aria-label="Autres onglets" aria-hidden="true">
   <div class="grab"></div>
   <a href="#charge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Charge d'entraînement</a>
-  <a href="#allure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 13l4-4"/><path d="M3.5 17a9 9 0 1 1 17 0"/></svg>Allure et intensité</a>
-  <a href="#records"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg>Records</a>
+  <a href="#allure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 13l4-4"/><path d="M3.5 17a9 9 0 1 1 17 0"/></svg>Allure et records</a>
   <a href="#enseignements"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>Enseignements</a>
   <button type="button" class="sl" id="moreSet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Réglages</button>
 </div>
@@ -713,8 +725,8 @@ body.lock{overflow:hidden}
   </div>
 
   <div class="g73">
-    <div class="card"><div class="hd"><h2>Diagnostic du moment<button class="help" type="button" data-h="diag" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="pill line">8 dernières semaines</span></div><ul class="list" id="diag"></ul></div>
-    <div class="card"><div class="hd"><h2>Signaux dans tes notes<button class="help" type="button" data-h="signaux" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="pill line">Strava + journal</span></div><ul class="list" id="alerts"></ul></div>
+    <div class="card"><div class="hd"><h2>Diagnostic du moment<button class="help" type="button" data-h="diag" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="pill line">8 dernières semaines</span></div><ul class="list" id="diag"></ul><div class="more" id="diagMore"></div></div>
+    <div class="card"><div class="hd"><h2>Signaux dans tes notes<button class="help" type="button" data-h="signaux" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="pill line">Strava + journal</span></div><ul class="list" id="alerts"></ul><div class="more" id="alertsMore"></div></div>
   </div>
 </section>
 
@@ -737,18 +749,23 @@ body.lock{overflow:hidden}
 
 <!-- ALLURE -->
 <section class="view" id="v-allure" hidden>
-  <div class="hero"><div><div class="lab">Course à pied uniquement</div><h1 style="margin-top:6px">Allure <em>et intensité.</em></h1></div></div>
+  <div class="hero"><div><div class="lab">Course à pied · meilleurs efforts Strava · Riegel 1,06</div><h1 style="margin-top:6px">Allure, records <em>et projections.</em></h1></div></div>
   <div class="card"><div class="hd"><h2>Allure moyenne par séance<button class="help" type="button" data-h="pace" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="muted small">Taille = distance · couleur = zone</span></div><div class="chart" id="paceScatter"></div></div>
   <div class="g2">
     <div class="card"><div class="hd"><h2>Temps par zone<button class="help" type="button" data-h="zones" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="pill line">8 sem. · approx. allure moyenne</span></div><div id="zones"></div><p class="muted small" id="zoneNote" style="margin-top:8px"></p></div>
     <div class="card"><div class="hd"><h2>Cadence<button class="help" type="button" data-h="cadence" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="muted small">pas / min</span></div><div class="chart narrow" id="cadence"></div><p class="muted small" id="cadNote" style="margin-top:8px"></p></div>
   </div>
   <div class="card"><div class="hd"><h2>Coût par kilomètre<button class="help" type="button" data-h="cost" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="muted small">Effort relatif ÷ km, sorties ≥ 5 km</span></div><div class="chart" id="cost"></div><p class="muted small" id="costNote" style="margin-top:8px"></p></div>
+  <div class="secsep" id="recordsAnchor"><span class="lab">Records et projections</span></div>
+  <div class="card"><div class="hd"><h2>Évolution des estimations<button class="help" type="button" data-h="esthist" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="muted small">Recalculées chaque semaine sur la fenêtre de 90 jours précédente</span></div><div class="chart" id="estHist"></div></div>
+  <div class="card"><div class="hd"><h2>Prédictions croisées depuis tes records<button class="help" type="button" data-h="pred" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="muted small">Chaque record extrapolé vers les autres distances</span></div><div class="tbl"><table id="pred" style="min-width:600px"></table></div></div>
+  <div class="card"><div class="hd"><h2>Indice d'endurance<button class="help" type="button" data-h="endur" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2></div><div id="endur"></div></div>
 </section>
 
 <!-- CONTEXTE -->
 <section class="view" id="v-contexte" hidden>
   <div class="hero"><div><div class="lab">Météo Strava · le reste se saisit</div><h1 style="margin-top:6px">Ton contexte, <em>pas juste tes chronos.</em></h1></div></div>
+  <div class="card" id="wxBox"></div>
   <div class="g2">
     <div class="card"><div class="hd"><h2>Température et coût<button class="help" type="button" data-h="temp" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="pill line" id="tempR"></span></div><div class="chart narrow" id="tempChart"></div><p class="muted small" id="tempNote" style="margin-top:8px"></p></div>
     <div class="card"><div class="hd"><h2>Disponibilité du jour<button class="help" type="button" data-h="ready" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="muted small">Fraîcheur + journal</span></div>
@@ -782,13 +799,6 @@ body.lock{overflow:hidden}
   <div class="card" id="shoeBox"></div>
 </section>
 
-<!-- RECORDS -->
-<section class="view" id="v-records" hidden>
-  <div class="hero"><div><div class="lab">Meilleurs efforts Strava · Riegel 1,06</div><h1 style="margin-top:6px">Records <em>et projections.</em></h1></div></div>
-  <div class="card"><div class="hd"><h2>Évolution des estimations<button class="help" type="button" data-h="esthist" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="muted small">Recalculées chaque semaine sur la fenêtre de 90 jours précédente</span></div><div class="chart" id="estHist"></div></div>
-  <div class="card"><div class="hd"><h2>Prédictions croisées depuis tes records<button class="help" type="button" data-h="pred" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="muted small">Chaque record extrapolé vers les autres distances</span></div><div class="tbl"><table id="pred" style="min-width:600px"></table></div></div>
-  <div class="card"><div class="hd"><h2>Indice d'endurance<button class="help" type="button" data-h="endur" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2></div><div id="endur"></div></div>
-</section>
 
 <!-- SÉANCES -->
 <section class="view" id="v-seances" hidden>
@@ -998,7 +1008,7 @@ const trimPerf=p=>p?{has_heartrate:p.has_heartrate,average_heartrate:p.average_h
 async function loadDetail(a,force){
   const slug=a.slug;if(DETAILS[slug]||(DLOAD[slug]&&DLOAD[slug].state==="loading"))return;
   if(DB&&!DLOAD[slug]){try{const s=await DB.doc("details/"+slug).get();if(s.exists){DETAILS[slug]=JSON.parse(JSON.stringify(s.data()));APP.renderStrava();return}}catch(e){}}
-  if(!MCP||!force){APP.renderStrava();return}
+  if(!MCP){APP.renderStrava();return}
   if(DLOAD[slug]&&DLOAD[slug].state==="error"&&!force)return;
   DLOAD[slug]={state:"loading"};APP.renderStrava();
   try{
@@ -1137,10 +1147,12 @@ DIAG.push(["warn","Écart",`<strong>Vitesse et endurance décalées.</strong> To
 DIAG.push([easyShare>=0.7?"good":"warn","Intensité",`<strong>${nf(easyShare*100,0)} % du temps en Z1-Z2.</strong> Repère 80 %. Trop de séances moyennes fatiguent sans bâtir de fond.`]);
 if(painNotes)DIAG.push(["bad","Douleur",`<strong>${painNotes} mention(s) de douleur sur 30 jours</strong> (notes Strava et journal). La plus forte hausse de volume récente : ×${nf(ramp.r||1,1)} en 3 semaines.`]);
 if(legsBefore.length)DIAG.push(["warn","Planif.",`<strong>Séance jambes la veille d'une longue :</strong> ${legsBefore.map(r=>fd(r.ds)).join(", ")}.`]);
-$("#diag").innerHTML=DIAG.map(d=>`<li><span class="pill ${d[0]}">${d[1]}</span><div>${d[2]}</div></li>`).join("");
+$("#diag").innerHTML=(DIAG_ALL?DIAG:DIAG.slice(0,4)).map(d=>`<li><span class="pill ${d[0]}">${d[1]}</span><div>${d[2]}</div></li>`).join("");
 const RULES=[[/tibia|douleur/i,"Douleur","bad"],[/crampe/i,"Crampes","bad"],[/énergie|lourd|pas de jambes|plus de jambes|pas de cardio|aucun cardio/i,"Fatigue","warn"],[/chaud/i,"Chaleur","warn"],[/sommeil/i,"Sommeil","warn"],[/bu\b/i,"Hydratation","warn"],[/bonnes sensations|progresse|reprend/i,"Positif","good"]];
 const AL=[];A.slice().reverse().forEach(a=>{if(!a.note)return;const t=RULES.filter(r=>r[0].test(a.note));if(t.length)AL.push({a,t})});
-$("#alerts").innerHTML=AL.slice(0,7).map(x=>`<li><span class="pill ${x.t[0][2]}">${x.t[0][1]}</span><div><strong>${fd(x.a.ds)}</strong> <span class="muted">· ${esc(x.a.name)}</span><br><span class="muted small">${esc(x.a.note)}</span></div></li>`).join("")||`<li><span class="pill line">Rien</span><div class="muted">Aucun signal dans tes notes récentes.</div></li>`;
+$("#diagMore").innerHTML=DIAG.length>4?`<button class="btn ghost sm" type="button" data-more="diag">${DIAG_ALL?"Voir moins":"Voir plus ("+(DIAG.length-4)+")"}</button>`:"";
+$("#alertsMore").innerHTML=AL.length>4?`<button class="btn ghost sm" type="button" data-more="alerts">${AL_ALL?"Voir moins":"Voir plus ("+(AL.length-4)+")"}</button>`:"";
+$("#alerts").innerHTML=(AL_ALL?AL:AL.slice(0,4)).map(x=>`<li><span class="pill ${x.t[0][2]}">${x.t[0][1]}</span><div><strong>${fd(x.a.ds)}</strong> <span class="muted">· ${esc(x.a.name)}</span><br><span class="muted small">${esc(x.a.note)}</span></div></li>`).join("")||`<li><span class="pill line">Rien</span><div class="muted">Aucun signal dans tes notes récentes.</div></li>`;
 
 /* graphiques */
 const monthTicks=()=>{const t=[];for(let i=0;i<N;i++)if(dsOf(i).slice(8)==="01")t.push(i);return t};
@@ -1358,7 +1370,8 @@ APP.renderStrava=function(){
     el.innerHTML=`<div class="hd"><h2>Détail Strava${HB("sstrava")}</h2><span class="pill line">Tours, FC, courbes</span></div>`+(L&&L.state==="loading"?`<p class="muted"><span class="sync spin"></span> Chargement des tours et des courbes depuis Strava…</p>`
      :L&&L.state==="error"?`<div class="msg bad">${L.msg}</div><div class="row" style="margin-top:10px"><button class="btn sm" type="button" data-load="${a.slug}">Réessayer</button></div>`
      :!MCP?`<p class="muted small">Le détail Strava (tours au km, fréquence cardiaque, dérive, courbes) se charge une fois Strava connecté dans les réglages (⚙).</p>`
-     :`<p class="muted small" style="margin-bottom:10px">Tours au km, fréquence cardiaque, dérive cardiaque, zones FC et meilleurs efforts de cette séance.</p><button class="btn sm" type="button" data-load="${a.slug}">Charger le détail Strava</button>`);
+     :`<p class="muted"><span class="sync spin"></span> Chargement des tours et des courbes depuis Strava…</p>`);
+    if(MCP&&!L)setTimeout(()=>loadDetail(a),0);
     return;
   }
   const perf=D.perf||{},S=D.streams||{},isRun=a.t==="R";
@@ -1519,6 +1532,8 @@ $("#qs").addEventListener("click",e=>{const b=e.target.closest("[data-q]");if(!b
 /* journal */
 $("#f-date").value=TODAY;
 var LOG_OPEN=false;
+var DIAG_ALL=false,AL_ALL=false;
+document.addEventListener("click",e=>{const b=e.target.closest("[data-more]");if(!b)return;if(b.dataset.more==="diag")DIAG_ALL=!DIAG_ALL;else AL_ALL=!AL_ALL;render()});
 function renderLogSum(){const el=$("#logSum");if(!el)return;const t=LOG.find(x=>x.date===TODAY);
   const bits=t?[t.sleep!=null?`sommeil ${nf(+t.sleep,t.sleep%1?2:0).replace(/,?0+$/,"")} h`:"",t.rhr?`FC repos ${t.rhr}`:"",t.kcal?`${t.kcal} kcal`:"",t.prot?`${t.prot} g prot.`:"",t.pain!=null||t.zone?`douleur ${t.pain??"–"}/10${t.zone?" "+esc(t.zone):""}`:""].filter(Boolean):[];
   el.hidden=LOG_OPEN;
@@ -1904,6 +1919,7 @@ const COURS=[
 ];
 let PROG=lsGet("foulee.renfo.v1",null)||{sessions:[]};
 let RF_ACTIVE=lsGet("foulee.renfo.active",null);
+var RF_LIB_ALL=false;
 let RF_DIRTY=false,RF_TIMER=null,RF_LIMIT=60,RF_COURS=null,RF_CONFIRM=null,RF_OPEN=false,RF_NEW=null;
 const rfF={q:"",m:"",c:"",e:"",v:""};
 const rfUid=()=>"x"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -1973,8 +1989,12 @@ function rfRenderLib(){
   const L=EXOS.filter(x=>(!q||rfSlug(x.n).includes(q))&&(!rfF.m||x.m.includes(rfF.m))&&(!rfF.c||x.c===rfF.c)&&(!rfF.e||x.e===rfF.e)&&(!rfF.v||x.v===+rfF.v));
   $("#rfCount").textContent=L.length+" / "+EXOS.length+" exercices";
   const inS=new Set((rfSess()||{items:[]}).items.map(i=>i.ex));
-  $("#rfList").innerHTML=L.slice(0,RF_LIMIT).map(x=>`<div class="lib"><div style="min-width:0"><button class="exn" type="button" data-exo="${x.id}">${esc(x.n)}</button><span class="muted small">${x.m.map(m=>MUS[m]).join(", ")}</span><span class="muted small">${CAT[x.c]} · ${x.e} · <span title="Niveau ${x.v} sur 3">${levelDots(x.v)}</span></span></div><button class="btn sm ${inS.has(x.id)?"ghost":""}" type="button" data-add="${x.id}" aria-label="Ajouter ${esc(x.n)}">${inS.has(x.id)?"✓ +":"+"}</button></div>`).join("")
-    +(L.length>RF_LIMIT?`<button class="btn ghost sm" type="button" id="rfMore" style="justify-self:center">Afficher ${Math.min(60,L.length-RF_LIMIT)} de plus</button>`:"")
+  const lst=$("#rfList");const lw=lst.clientWidth||Math.min(window.innerWidth,1200)-(window.innerWidth<=760?64:110);const cols=Math.max(1,Math.floor((lw+6)/266));const cap=RF_LIB_ALL?RF_LIMIT:cols*2;
+  lst.classList.toggle("open",RF_LIB_ALL);
+  lst.innerHTML=L.slice(0,cap).map(x=>`<div class="lib"><div style="min-width:0"><button class="exn" type="button" data-exo="${x.id}">${esc(x.n)}</button><span class="muted small">${x.m.map(m=>MUS[m]).join(", ")}</span><span class="muted small">${CAT[x.c]} · ${x.e} · <span title="Niveau ${x.v} sur 3">${levelDots(x.v)}</span></span></div><button class="btn sm ${inS.has(x.id)?"ghost":""}" type="button" data-add="${x.id}" aria-label="Ajouter ${esc(x.n)}">${inS.has(x.id)?"✓ +":"+"}</button></div>`).join("")
+    +(!RF_LIB_ALL&&L.length>cap?`<button class="btn ghost sm" type="button" id="rfLibAll" style="justify-self:center;grid-column:1/-1">Voir plus (${L.length-cap} exercices)</button>`:"")
+    +(RF_LIB_ALL&&L.length>RF_LIMIT?`<button class="btn ghost sm" type="button" id="rfMore" style="justify-self:center;grid-column:1/-1">Afficher ${Math.min(60,L.length-RF_LIMIT)} de plus</button>`:"")
+    +(RF_LIB_ALL&&L.length>cols*2?`<button class="btn ghost sm" type="button" id="rfLibAll" style="justify-self:center;grid-column:1/-1">Réduire</button>`:"")
     +(!L.length?`<p class="muted small">Aucun exercice ne correspond. Retire un filtre.</p>`:"");
 }
 function rfRenderCours(){
@@ -2050,6 +2070,7 @@ rfRoot.addEventListener("click",e=>{
   if(b=t.closest("[data-tpl]")){const tp=TEMPLATES[+b.dataset.tpl],items=tp[1].map(exByName).filter(Boolean).map(x=>rfItem(x.id));const s=rfSess();if(s&&!s.items.length){s.items=items;if(/^Séance \d+$/.test(s.name))s.name=tp[0];rfSave()}else rfNewSession(tp[0],null,items);renderRenfo();return}
   if(b=t.closest("[data-cours]")){RF_COURS=+b.dataset.cours;rfRenderCours();return}
   if(t.closest("#rfMore")){RF_LIMIT+=60;rfRenderLib();return}
+  if(t.closest("#rfLibAll")){RF_LIB_ALL=!RF_LIB_ALL;RF_LIMIT=60;rfRenderLib();if(!RF_LIB_ALL)$("#rfList").scrollIntoView({block:"nearest",behavior:"smooth"});return}
   if(t.closest("#rfNew")){RF_NEW={k:null,ds:null};RF_OPEN=false;renderRenfo();$("#rfWeekX").scrollIntoView({behavior:"smooth",block:"center"});const n=$("#rfn-name");n&&n.focus({preventScroll:true});return}
   const s=rfSess();if(!s)return;
   if(t.closest("#rfDup")){rfNewSession(s.name+" (copie)",null,s.items.map(it=>Object.assign({},it,{uid:rfUid()})));renderRenfo();return}
@@ -2338,17 +2359,22 @@ async function setPhoto(id,file){
     try{await shoeSave(s);SH_EDIT=null;SH_NEWPHOTO=null;renderShoes()}catch(err){$("#shMsg").textContent="Enregistrement refusé ("+(err.code||"erreur")+"). La photo est peut-être trop lourde : essaie une image plus petite."}});
 })();
 /* sélecteur dans la fiche séance */
+var SD_EDIT=null,SD_MSG="";
 function shoeDetail(a){
   if(a.t!=="R"||!a.km)return;const anchor=$("#sStrava");if(!anchor)return;
   const u=SUSE[a.slug],act=SHOES.filter(s=>!s.retired||(u&&u.shoe===s.id));
+  if(u&&SD_EDIT!==a.slug){const sh=SHOES.find(s=>s.id===u.shoe);
+    anchor.insertAdjacentHTML("beforebegin",`<div class="card" id="sShoe"><div class="hd" style="margin-bottom:10px"><h2>Chaussures utilisées${HB("shoes")}</h2><div class="row" style="gap:8px"><span class="pill good">Enregistré</span><button class="btn ghost sm" type="button" data-sdedit="${a.slug}">Modifier</button></div></div>
+    <div class="row" style="gap:12px;align-items:center">${sh&&sh.photo?`<img src="${sh.photo}" alt="" style="width:64px;height:48px;object-fit:contain;border-radius:10px;background:#fff">`:""}<div><b>${sh?esc(sh.name):"Paire supprimée"}</b><div class="muted small">${nf(+u.km||0,2)} km comptés${sh?" · total paire "+nf(shoeKm(sh.id),0)+" km":""}</div></div></div>${SD_MSG?`<p class="muted small" style="margin-top:6px">${SD_MSG}</p>`:""}</div>`);SD_MSG="";return}
   anchor.insertAdjacentHTML("beforebegin",`<div class="card" id="sShoe"><div class="hd"><h2>Chaussures utilisées<button class="help" type="button" data-h="shoes" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2>${u?`<span class="pill good">Enregistré</span>`:`<span class="pill line">Non renseigné</span>`}</div>
   ${SHOES.length?`<div class="row" style="align-items:flex-end;gap:10px"><label class="small muted" style="display:flex;flex-direction:column;gap:4px;min-width:200px;flex:1" for="sd-shoe">Paire<select id="sd-shoe"><option value="">Aucune</option>${act.map(s=>`<option value="${s.id}"${u&&u.shoe===s.id?" selected":""}>${esc(s.name)} · ${nf(shoeKm(s.id),0)} km</option>`).join("")}</select></label>
   <label class="small muted" style="display:flex;flex-direction:column;gap:4px;width:110px" for="sd-km">Km comptés<input id="sd-km" type="number" min="0" step="0.01" value="${u?u.km:a.km.toFixed(2)}"></label>
-  <button class="btn sm" type="button" id="sdSave" data-slug="${a.slug}" data-ds="${a.ds}">Enregistrer</button><span class="muted small" id="sdMsg"></span></div>`
+  <button class="btn sm" type="button" id="sdSave" data-slug="${a.slug}" data-ds="${a.ds}">Enregistrer</button>${u?`<button class="btn ghost sm" type="button" data-sdcancel="1">Annuler</button>`:""}<span class="muted small" id="sdMsg"></span></div>`
   :`<p class="muted small">Ajoute d'abord tes chaussures dans l'onglet <a href="#contexte">Contexte</a>, carte « Mes chaussures ».</p>`}</div>`);
 }
+document.addEventListener("click",e=>{let b;if(b=e.target.closest("[data-sdedit]")){SD_EDIT=b.dataset.sdedit;APP.detail(SD_EDIT);return}if(e.target.closest("[data-sdcancel]")){SD_EDIT=null;if(APP.curDetail)APP.detail(APP.curDetail.a.slug)}});
 document.addEventListener("click",async e=>{const b=e.target.closest("#sdSave");if(!b)return;const shoe=$("#sd-shoe").value,km=+$("#sd-km").value||0;
-  try{await useSet(b.dataset.slug,shoe?{shoe,km,ds:b.dataset.ds}:null);$("#sdMsg").textContent=shoe?"Enregistré : "+nf(km,1)+" km ajoutés à la paire.":"Chaussure retirée de cette séance.";renderShoes()}catch(err){$("#sdMsg").textContent="Enregistrement refusé ("+(err.code||"erreur")+")."}});
+  try{await useSet(b.dataset.slug,shoe?{shoe,km,ds:b.dataset.ds}:null);SD_EDIT=null;SD_MSG=shoe?"Enregistré : "+nf(km,1)+" km ajoutés à la paire.":"";renderShoes();if(APP.curDetail)APP.detail(APP.curDetail.a.slug)}catch(err){$("#sdMsg").textContent="Enregistrement refusé ("+(err.code||"erreur")+")."}});
 
 /* ---------- générateur de plan ---------- */
 let PLAN=lsGet("foulee.plan.v1",null),PL_OPEN=null,PL_FORM=false,PL_CONFIRM=false,PL_EDIT=null,PL_TIMER=null,PL_DIRTY=false;
@@ -2529,7 +2555,7 @@ function routeRender(a){
     if(!MCP){box.innerHTML=hd+`<p class="muted small">Le tracé se charge depuis Strava une fois Strava connecté dans les réglages (⚙).</p>`;return}
     if(st&&st.err){box.innerHTML=hd+`<div class="msg bad">${st.err}</div><div class="row" style="margin-top:10px"><button class="btn sm" type="button" data-rtload="1">Réessayer</button></div>`;return}
     if(st){box.innerHTML=hd+`<p class="muted"><span class="sync spin"></span> Chargement du tracé GPS…</p>`;return}
-    box.innerHTML=hd+`<p class="muted small" style="margin-bottom:10px">Le détail de cette séance a été chargé avant l'ajout des parcours : il manque le tracé GPS (1 requête Strava).</p><button class="btn sm" type="button" data-rtfetch="1">Charger le tracé</button>`;return;
+    box.innerHTML=hd+`<p class="muted"><span class="sync spin"></span> Chargement du tracé GPS…</p>`;setTimeout(()=>{if(!RT.loading[a.slug]&&APP.curDetail&&APP.curDetail.a.slug===a.slug)routeFetch(a)},0);return;
   }
   const al=R.pts.filter(p=>p.alt!=null).map(p=>p.alt);R.aMin=Math.min(...al);R.aMax=Math.max(...al);
   if(RT.mode==="hr"&&!R.hasHr)RT.mode="pace";
@@ -2636,13 +2662,17 @@ let RPE=lsGet("foulee.rpe.v1",{});
 const BORG=["","Très très facile","Très facile","Facile","Modéré","Un peu dur","Dur","Très dur","Très très dur","Presque maximal","Maximal"];
 const RTAGS=["Bonnes sensations","Jambes lourdes","Souffle court","Crampes","Point de côté","Chaleur","Fringale","Douleur","Mal dormi","Stressé"];
 const RZONES=["","Pied","Cheville","Tendon d'Achille","Mollet","Tibia","Genou","Quadriceps","Ischios","Hanche","Dos","Autre"];
-let RPE_DRAFT=null,RPE_JUST=null;
+let RPE_DRAFT=null,RPE_JUST=null,RPE_OPEN=null;
 async function rpeSet(slug,o){if(DB){if(o)await DB.doc("rpe/"+slug).set(o);else await DB.doc("rpe/"+slug).delete()}else{if(o)RPE[slug]=o;else delete RPE[slug];lsSet("foulee.rpe.v1",RPE)}}
 function rpeDetail(a){
   const anchor=$("#sStrava");if(!anchor||!a)return;
   const r=RPE[a.slug]||null,d=RPE_DRAFT&&RPE_DRAFT.slug===a.slug?RPE_DRAFT:Object.assign({slug:a.slug,rpe:null,tags:[],pain:0,zone:"",fuel:null,note:""},r||{});RPE_DRAFT=d;
   const min=a.s/60,load=d.rpe?Math.round(d.rpe*min):null;
-  anchor.insertAdjacentHTML("beforebegin",`<div class="card" id="sRpe"><div class="hd"><h2>Ton ressenti${HB("rpe")}</h2>${r?`<span class="pill good">Enregistré</span>`:`<span class="pill line">À saisir</span>`}</div>
+  if(RPE_OPEN!==a.slug){
+    const sum=r?[`Effort <b>${r.rpe}/10</b> (${BORG[r.rpe].toLowerCase()})`,`charge ${Math.round(r.rpe*min)} UA`,r.tags&&r.tags.length?esc(r.tags.join(", ")):"",r.pain?`douleur ${r.pain}/10${r.zone?" "+esc(r.zone.toLowerCase()):""}`:""].filter(Boolean).join(" · "):"";
+    anchor.insertAdjacentHTML("beforebegin",`<div class="card" id="sRpe"><div class="hd" style="margin-bottom:${r?"10px":"0"}"><h2>Ton ressenti${HB("rpe")}</h2><div class="row" style="gap:8px">${r?`<span class="pill good">Rempli</span><button class="btn ghost sm" type="button" data-rpeopen="${a.slug}">Voir les données renseignées</button>`:`<span class="pill warn">À remplir</span><button class="btn sm" type="button" data-rpeopen="${a.slug}">Remplir</button>`}</div></div>${r?`<p class="small">${sum}</p>${RPE_JUST===a.slug?`<p class="muted small" style="margin-top:4px">Enregistré. Merci, ça nourrit l'onglet Enseignements.</p>`:""}`:""}</div>`);
+    return}
+  anchor.insertAdjacentHTML("beforebegin",`<div class="card" id="sRpe"><div class="hd"><h2>Ton ressenti${HB("rpe")}</h2><div class="row" style="gap:8px">${r?`<span class="pill good">Rempli</span>`:`<span class="pill warn">À remplir</span>`}<button class="btn ghost sm" type="button" data-rpeclose="1">Réduire</button></div></div>
   <p class="muted small" style="margin-bottom:10px">Note l'effort tel que tu l'as vécu, idéalement dans les 30 minutes qui suivent. 1 = très très facile, 10 = à bloc.</p>
   <div class="rpe-scale" role="group" aria-label="Effort perçu de 1 à 10">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="rpe-b" data-rpe="${n}" aria-pressed="${d.rpe===n}" style="--h:${130-n*12}"><b>${n}</b><span>${BORG[n]}</span></button>`).join("")}</div>
   <div class="row small" style="margin:8px 0 12px;gap:8px"><span class="muted">Charge perçue :</span><strong class="num" id="rpeLoad">${load!=null?load+" UA":"–"}</strong><span class="muted">(note × ${nf(min,0)} min)</span></div>
@@ -2656,13 +2686,15 @@ function rpeDetail(a){
   <div class="row" style="margin-top:10px;gap:10px"><button class="btn sm" type="button" id="rpSave" data-slug="${a.slug}" data-ds="${a.ds}">Enregistrer</button>${r?`<button class="btn ghost sm" type="button" id="rpDel" data-slug="${a.slug}">Effacer</button>`:""}<span class="muted small" id="rpMsg">${RPE_JUST===a.slug?"Enregistré. Merci, ça nourrit l'onglet Enseignements.":""}</span></div></div>`);
 }
 document.addEventListener("click",async e=>{let b;
+  if(b=e.target.closest("[data-rpeopen]")){RPE_OPEN=b.dataset.rpeopen;RPE_JUST=null;RPE_DRAFT=null;APP.detail(RPE_OPEN);const c=$("#sRpe");c&&c.scrollIntoView({block:"nearest",behavior:"smooth"});return}
+  if(e.target.closest("[data-rpeclose]")){RPE_OPEN=null;RPE_DRAFT=null;if(APP.curDetail)APP.detail(APP.curDetail.a.slug);return}
   if(b=e.target.closest("[data-rpe]")){if(!RPE_DRAFT)return;RPE_DRAFT.rpe=+b.dataset.rpe;document.querySelectorAll("[data-rpe]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
     const a=APP.curDetail&&APP.curDetail.a;if(a)$("#rpeLoad").textContent=Math.round(RPE_DRAFT.rpe*a.s/60)+" UA";return}
   if(b=e.target.closest("[data-rtag]")){if(!RPE_DRAFT)return;const t=b.dataset.rtag,on=RPE_DRAFT.tags.includes(t);RPE_DRAFT.tags=on?RPE_DRAFT.tags.filter(x=>x!==t):RPE_DRAFT.tags.concat(t);b.setAttribute("aria-pressed",String(!on));return}
   if(b=e.target.closest("#rpSave")){const d=RPE_DRAFT;if(!d||!d.rpe){$("#rpMsg").textContent="Choisis d'abord une note d'effort de 1 à 10.";return}
     const f=$("#rp-fuel");const o={rpe:d.rpe,tags:d.tags,pain:clamp(+$("#rp-pain").value||0,0,10),zone:$("#rp-zone").value,fuel:f&&f.value!==""?+f.value:null,note:$("#rp-note").value.trim(),ds:b.dataset.ds,at:new Date().toISOString()};
-    RPE_JUST=b.dataset.slug;try{await rpeSet(b.dataset.slug,o);RPE[b.dataset.slug]=o;RPE_DRAFT=null;$("#rpMsg").textContent="Enregistré. Merci, ça nourrit l'onglet Enseignements.";const p=$("#sRpe .hd .pill");if(p){p.className="pill good";p.textContent="Enregistré"}renderIns()}catch(err){$("#rpMsg").textContent="Enregistrement refusé ("+(err.code||"erreur")+")."}return}
-  if(b=e.target.closest("#rpDel")){try{await rpeSet(b.dataset.slug,null);delete RPE[b.dataset.slug];RPE_DRAFT=null;if(APP.curDetail)APP.detail(APP.curDetail.a.slug);renderIns()}catch(err){$("#rpMsg").textContent="Suppression refusée."}}
+    RPE_JUST=b.dataset.slug;try{await rpeSet(b.dataset.slug,o);RPE[b.dataset.slug]=o;RPE_DRAFT=null;RPE_OPEN=null;renderIns();if(APP.curDetail)APP.detail(APP.curDetail.a.slug)}catch(err){const m=$("#rpMsg");if(m)m.textContent="Enregistrement refusé ("+(err.code||"erreur")+")."}return}
+  if(b=e.target.closest("#rpDel")){try{await rpeSet(b.dataset.slug,null);delete RPE[b.dataset.slug];RPE_DRAFT=null;RPE_OPEN=null;if(APP.curDetail)APP.detail(APP.curDetail.a.slug);renderIns()}catch(err){$("#rpMsg").textContent="Suppression refusée."}}
 });
 
 document.addEventListener("input",e=>{const t=e.target;if(!RPE_DRAFT||!t.id||!/^rp-/.test(t.id))return;const k={"rp-pain":"pain","rp-zone":"zone","rp-note":"note","rp-fuel":"fuel"}[t.id];if(!k)return;RPE_DRAFT[k]=k==="note"||k==="zone"?t.value:t.value===""?null:+t.value;RPE_JUST=null});
@@ -2852,6 +2884,7 @@ document.addEventListener("click",async e=>{let b;
     try{out.textContent=await aiAsk("Fais-moi le point de mes enseignements : ce qui va bien, les 2 priorités à changer, et pourquoi. 10 phrases maximum, sans liste à rallonge.")}catch(err){out.textContent=err.message}b.disabled=false}
 });
 const INS_HELP={
+wx:["Météo du jour",`<p>Les conditions actuelles et les prochaines heures à l'endroit choisi. Les données viennent des modèles de Météo-France (AROME, maille de 1,5 à 2,5 km, recalculé chaque heure, et ARPEGE au-delà), servis gratuitement par Open-Meteo.</p><p>La carte se met à jour seule toutes les 10 minutes quand l'appli est ouverte, et dès que tu y reviens. Le bouton ↻ force une mise à jour.</p><p><b>Meilleur créneau</b> : l'heure de jour, d'ici ce soir, où la température ressentie est la plus proche de 12 °C, sans pluie et avec le moins de vent. C'est la plage où l'on court le plus vite pour le même effort.</p><p>Le lieu reste enregistré sur cet appareil uniquement.</p>`],
 ins:["Enseignements",`<p>Ici, l'appli croise tes données (séances, journal, ressenti, météo, détail Strava) pour repérer ce qui se répète chez toi : est-ce que le sommeil change tes sorties, si tes douleurs suivent tes pics de charge, si ton endurance progresse…</p><p>Chaque carte donne le constat avec tes chiffres, le mécanisme physiologique derrière, et quoi faire.</p><p><b>Solide</b> : assez de données pour s'y fier. <b>Indice</b> : tendance à confirmer. Ce sont des corrélations : elles orientent, elles ne prouvent pas une cause.</p>`],
 insData:["Qualité des données",`<p>Plus tu renseignes de choses, plus les enseignements sont fiables et nombreux. Ces barres montrent ce qui est saisi sur les 60 derniers jours.</p><p>Le plus utile, par ordre : le <b>ressenti</b> après chaque séance (30 secondes), le <b>sommeil</b> et la <b>FC au réveil</b>.</p>`],
 insLock:["À débloquer",`<p>Ces analyses existent déjà mais attendent plus de données. Le compteur montre où tu en es.</p>`],
@@ -2859,6 +2892,94 @@ insAi:["Synthèse par l'IA",`<p>L'IA locale reçoit les enseignements calculés 
 rpe:["Ton ressenti",`<p>L'<b>effort perçu</b> (échelle de Borg, de 1 à 10) est la note que tu donnes à la difficulté de la séance. C'est une mesure utilisée par les entraîneurs depuis des décennies et elle est étonnamment fiable.</p><p>La <b>charge perçue</b> = note × durée en minutes (méthode de Foster). Une sortie de 40 min notée 4 vaut 160 UA.</p><p>Comparée à ta fréquence cardiaque, elle révèle la fatigue que le cœur ne montre pas encore. Les sensations, la douleur et les glucides pris servent aux enseignements (crampes, blessures).</p>`]
 };
 
+
+/* ---------- météo du jour (Météo-France AROME/ARPEGE via Open-Meteo) ---------- */
+var WX={loc:null,data:null,err:null,at:null,timer:null,busy:false,search:false};
+try{WX.loc=JSON.parse(localStorage.getItem("foulee.wx.loc")||"null")}catch(e){}
+const WXI={
+ sun:'<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/>',
+ moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+ partly:'<path d="M8.5 6.2a3.6 3.6 0 0 1 5.6 2.3"/><path d="M4.6 5l1 1M8.5 2.6v1.3M12.6 4.4l-.9.9"/><path d="M7 19h10a3.8 3.8 0 0 0 .4-7.6 5 5 0 0 0-9.6 1.3A3.2 3.2 0 0 0 7 19z"/>',
+ cloud:'<path d="M6.5 19h11a4.2 4.2 0 0 0 .5-8.4 5.6 5.6 0 0 0-10.8 1.6A3.5 3.5 0 0 0 6.5 19z"/>',
+ fog:'<path d="M4 9h16M3 13h18M5 17h14"/>',
+ rain:'<path d="M6.5 15h11a4 4 0 0 0 .5-8 5.4 5.4 0 0 0-10.4 1.5A3.3 3.3 0 0 0 6.5 15z"/><path d="M8 18l-1 2.5M12 18l-1 2.5M16 18l-1 2.5"/>',
+ snow:'<path d="M6.5 14h11a4 4 0 0 0 .5-8 5.4 5.4 0 0 0-10.4 1.5A3.3 3.3 0 0 0 6.5 14z"/><path d="M8 18h.01M12 19h.01M16 18h.01M10 21h.01M14 21h.01"/>',
+ storm:'<path d="M6.5 14h11a4 4 0 0 0 .5-8 5.4 5.4 0 0 0-10.4 1.5A3.3 3.3 0 0 0 6.5 14z"/><path d="M12.5 15l-2 3.5h3l-2 3.5"/>'
+};
+const wxCode=(c,day)=>{
+  if(c===0)return[day?"sun":"moon","Ciel dégagé"];if(c===1)return[day?"sun":"moon","Plutôt dégagé"];if(c===2)return["partly","Partiellement nuageux"];if(c===3)return["cloud","Couvert"];
+  if(c===45||c===48)return["fog","Brouillard"];if(c>=51&&c<=55)return["rain","Bruine"];if(c===56||c===57)return["rain","Bruine verglaçante"];
+  if(c===61)return["rain","Pluie faible"];if(c===63)return["rain","Pluie modérée"];if(c===65)return["rain","Forte pluie"];if(c===66||c===67)return["rain","Pluie verglaçante"];
+  if(c>=71&&c<=77)return["snow","Neige"];if(c===80)return["rain","Averses faibles"];if(c===81)return["rain","Averses"];if(c===82)return["rain","Fortes averses"];if(c===85||c===86)return["snow","Averses de neige"];
+  if(c>=95)return["storm",c>95?"Orage avec grêle":"Orage"];return["cloud","—"]};
+const wxSvg=(k,sz)=>`<svg viewBox="0 0 24 24" width="${sz||24}" height="${sz||24}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${WXI[k]||WXI.cloud}</svg>`;
+const wxDir=d=>["N","NE","E","SE","S","SO","O","NO"][Math.round(((d%360)+360)%360/45)%8];
+function wxSaveLoc(l){WX.loc=l;try{localStorage.setItem("foulee.wx.loc",JSON.stringify(l))}catch(e){}}
+async function wxFetch(force){
+  if(!WX.loc||WX.busy)return;if(!force&&WX.at&&Date.now()-WX.at<5*60e3)return;
+  WX.busy=true;WX.err=null;renderWx();
+  const q=`latitude=${WX.loc.lat.toFixed(4)}&longitude=${WX.loc.lon.toFixed(4)}&timezone=auto&forecast_days=2&wind_speed_unit=kmh`
+    +`&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m,is_day`
+    +`&hourly=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,is_day`
+    +`&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,uv_index_max`;
+  try{let r=await fetch("https://api.open-meteo.com/v1/forecast?"+q+"&models=meteofrance_seamless");let src="Météo-France (AROME / ARPEGE)";
+    if(!r.ok){r=await fetch("https://api.open-meteo.com/v1/forecast?"+q);src="modèles nationaux (Open-Meteo)"}
+    if(!r.ok)throw new Error("HTTP "+r.status);const j=await r.json();if(!j.current)throw new Error("réponse vide");
+    WX.data=j;WX.src=src;WX.at=Date.now()}
+  catch(e){WX.err="Météo indisponible pour le moment ("+(e.message||"réseau")+")."}
+  WX.busy=false;renderWx();
+}
+function wxBest(j){/* meilleur créneau d'1 h pour courir aujourd'hui, de jour, dans les heures à venir */
+  const H=j.hourly,now=j.current.time.slice(0,13),day=j.current.time.slice(0,10);let best=null;
+  H.time.forEach((t,i)=>{if(t.slice(0,10)!==day||t.slice(0,13)<now||!H.is_day[i])return;const T=H.apparent_temperature[i],p=H.precipitation[i]||0,w=H.wind_speed_10m[i]||0;
+    const sc=Math.abs(T-12)*1.2+p*12+Math.max(0,w-15)*.6+(H.weather_code[i]>=95?40:0);if(!best||sc<best.sc)best={sc,i,t,T,p,w}});return best}
+function wxAdvice(c){const T=c.apparent_temperature,w=c.wind_speed_10m,p=c.precipitation,code=c.weather_code,out=[];
+  if(code>=95)out.push(["bad","Orage en cours ou proche : évite de courir à découvert."]);
+  if(T>=25)out.push(["warn","Chaleur : ralentis de 10 à 20 s/km, cale-toi sur la FC et emporte de l'eau."]);
+  else if(T>=20)out.push(["warn","Il fait doux à chaud : bois avant de partir si tu dépasses 45 min."]);
+  else if(T<=0)out.push(["info","Froid : échauffement plus long, gants et bonnet, et méfie-toi des zones verglacées."]);
+  else if(T<=6)out.push(["info","Frais : une couche de plus au départ, que tu peux retirer après 10 min."]);
+  if(w>=30)out.push(["warn",`Vent fort (${Math.round(w)} km/h) : pars face au vent pour le rentrer dans le dos au retour, et juge l'effort à la FC plutôt qu'à l'allure.`]);
+  if(p>0.2&&code<95)out.push(["info","Il pleut : chaussures à bonne accroche, et attention aux bandes blanches et plaques d'égout."]);
+  if(!out.length)out.push(["good","Conditions idéales pour courir."]);return out}
+function renderWx(){
+  const box=$("#wxBox");if(!box)return;
+  const head=`<div class="hd"><h2>Météo du jour${HB("wx")}</h2><div class="row" style="gap:6px">${WX.loc?`<button class="chip" type="button" id="wxPlace" title="Changer de lieu">${esc(WX.loc.name||"Ma position")} ▾</button><button class="btn ghost sm" type="button" id="wxRefresh" aria-label="Actualiser la météo"${WX.busy?" disabled":""}>${WX.busy?"…":"↻"}</button>`:""}</div></div>`;
+  const pick=`<div class="wxpick"><p class="small muted">Choisis le lieu pour la météo : ta position actuelle, ou une ville.</p><div class="row" style="gap:8px;margin-top:8px"><button class="btn sm" type="button" id="wxGeo">Utiliser ma position</button><form id="wxForm" class="row" style="gap:6px;flex:1;min-width:200px"><input id="wxQ" type="search" placeholder="Ville (ex. Toulouse)" aria-label="Ville" style="flex:1"><button class="btn ghost sm" type="submit">Chercher</button></form></div><div id="wxRes" class="chips" style="margin-top:8px"></div>${WX.loc?`<button class="lnkbtn" type="button" id="wxCancel" style="margin-top:6px">Annuler</button>`:""}<p class="small muted" id="wxMsg" style="margin-top:6px"></p></div>`;
+  if(!WX.loc||WX.search){box.innerHTML=head+pick;return}
+  if(!WX.data){box.innerHTML=head+`<p class="muted small">${WX.err?esc(WX.err):"Chargement de la météo…"}</p>`;return}
+  const j=WX.data,c=j.current,[ik,lab]=wxCode(c.weather_code,c.is_day),d=j.daily,H=j.hourly;
+  const nowH=c.time.slice(0,13);let k0=H.time.findIndex(t=>t.slice(0,13)===nowH);if(k0<0)k0=0;
+  const hours=H.time.slice(k0+1,k0+9).map((t,n)=>{const i=k0+1+n,[hk]=wxCode(H.weather_code[i],H.is_day[i]);return`<div class="wxh"><span class="muted small">${t.slice(11,13)} h</span>${wxSvg(hk,22)}<b class="num">${Math.round(H.temperature_2m[i])}°</b><span class="small ${H.precipitation[i]>0.1?"wxrain":"muted"}">${H.precipitation[i]>0.1?nf(H.precipitation[i],1)+" mm":"sec"}</span></div>`}).join("");
+  const best=wxBest(j),adv=wxAdvice(c);
+  const age=WX.at?Math.round((Date.now()-WX.at)/60e3):0;
+  box.innerHTML=head+`<div class="wxnow"><div class="wxic">${wxSvg(ik,58)}</div><div><div class="wxt num">${Math.round(c.temperature_2m)}°</div><div class="small">${lab} · ressenti ${Math.round(c.apparent_temperature)}°</div></div>
+    <div class="wxstats"><div><span class="lab">Vent</span><b class="num">${Math.round(c.wind_speed_10m)} km/h ${wxDir(c.wind_direction_10m)}</b><span class="muted small">rafales ${Math.round(c.wind_gusts_10m)}</span></div>
+    <div><span class="lab">Humidité</span><b class="num">${c.relative_humidity_2m} %</b></div>
+    <div><span class="lab">Aujourd'hui</span><b class="num">${Math.round(d.temperature_2m_min[0])}° / ${Math.round(d.temperature_2m_max[0])}°</b><span class="muted small">pluie ${nf(d.precipitation_sum[0]||0,1)} mm${d.uv_index_max&&d.uv_index_max[0]!=null?" · UV "+Math.round(d.uv_index_max[0]):""}</span></div>
+    <div><span class="lab">Soleil</span><b class="num">${d.sunrise[0].slice(11,16)} – ${d.sunset[0].slice(11,16)}</b></div></div></div>
+  <div class="wxhours" role="list" aria-label="Prochaines heures">${hours}</div>
+  ${best?`<div class="wxbest"><span class="pill good">Meilleur créneau</span><span class="small">${best.t.slice(11,13)} h – ${String(+best.t.slice(11,13)+1).padStart(2,"0")} h : ${Math.round(best.T)}° ressentis, ${best.p>0.1?nf(best.p,1)+" mm":"sec"}, vent ${Math.round(best.w)} km/h</span></div>`:""}
+  <ul class="list" style="margin-top:10px">${adv.map(a=>`<li><span class="pill ${a[0]}">${a[0]==="good"?"OK":a[0]==="info"?"Conseil":"Attention"}</span><div>${a[1]}</div></li>`).join("")}</ul>
+  <p class="muted small" style="margin-top:8px">${WX.err?esc(WX.err)+" Dernières données affichées. ":""}Source : ${WX.src}, via Open-Meteo · mis à jour ${age<1?"à l'instant":"il y a "+age+" min"} · actualisation automatique toutes les 10 min.</p>`;
+}
+document.addEventListener("click",async e=>{const t=e.target;let b;
+  if(t.closest("#wxRefresh")){wxFetch(true);return}
+  if(t.closest("#wxPlace")){WX.search=true;renderWx();const q=$("#wxQ");q&&q.focus();return}
+  if(t.closest("#wxCancel")){WX.search=false;renderWx();return}
+  if(t.closest("#wxGeo")){const m=$("#wxMsg");if(!navigator.geolocation){m.textContent="La localisation n'est pas disponible sur cet appareil : cherche une ville.";return}
+    m.textContent="Localisation…";navigator.geolocation.getCurrentPosition(p=>{wxSaveLoc({lat:p.coords.latitude,lon:p.coords.longitude,name:"Ma position",geo:true});WX.search=false;WX.data=null;wxFetch(true)},
+      err=>{m.textContent=err.code===1?"Localisation refusée. Autorise-la dans les réglages du navigateur, ou cherche une ville.":"Position introuvable pour le moment : cherche une ville."},{timeout:10000,maximumAge:600000});return}
+  if(b=t.closest("[data-wxloc]")){const o=JSON.parse(b.dataset.wxloc);wxSaveLoc(o);WX.search=false;WX.data=null;wxFetch(true);return}
+});
+document.addEventListener("submit",async e=>{if(e.target.id!=="wxForm")return;e.preventDefault();const q=$("#wxQ").value.trim(),res=$("#wxRes"),m=$("#wxMsg");if(q.length<2)return;m.textContent="Recherche…";
+  try{const r=await fetch("https://geocoding-api.open-meteo.com/v1/search?count=6&language=fr&format=json&name="+encodeURIComponent(q));const j=await r.json();const L=j.results||[];
+    m.textContent=L.length?"Choisis le bon lieu :":"Aucun lieu trouvé.";res.innerHTML=L.map(x=>`<button class="chip" type="button" data-wxloc="${esc(JSON.stringify({lat:x.latitude,lon:x.longitude,name:x.name}))}">${esc(x.name)}${x.admin2||x.admin1?" · "+esc(x.admin2||x.admin1):""}${x.country_code&&x.country_code!=="FR"?" ("+esc(x.country_code)+")":""}</button>`).join("")}
+  catch(err){m.textContent="Recherche impossible pour le moment."}});
+function wxStart(){renderWx();if(WX.loc){if(WX.loc.geo&&navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{WX.loc.lat=p.coords.latitude;WX.loc.lon=p.coords.longitude;wxSaveLoc(WX.loc)},()=>{},{timeout:8000,maximumAge:600000});wxFetch(true)}
+  clearInterval(WX.timer);WX.timer=setInterval(()=>{if(document.visibilityState==="visible")wxFetch(true);else renderWx()},10*60e3)}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&WX.loc&&(!WX.at||Date.now()-WX.at>10*60e3))wxFetch(true)});
+setInterval(()=>{if(WX.data&&location.hash==="#contexte"&&!WX.search)renderWx()},60e3);
 
 /* ---------- navigation mobile, coach en bulle ---------- */
 function sheetClose(){const sh=$("#moreSheet");if(!sh)return;sh.classList.remove("open");sh.setAttribute("aria-hidden","true");if(!document.body.classList.contains("coach-open"))$("#scrim").classList.remove("on")}
@@ -2873,13 +2994,14 @@ document.addEventListener("click",e=>{const t=e.target;
   if(t.closest("#moreSheet a")){sheetClose();return}
   if(t.closest("#scrim")){sheetClose();coachClose();return}});
 document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("#setPop").hidden){closeSettings();return}if(document.body.classList.contains("coach-open"))coachClose();sheetClose()});
-const VIEWS=["synthese","charge","allure","contexte","records","seances","renfo","enseignements"];
-function route(){const h=location.hash.slice(1);const det=/^s-[0-9A-Za-z-]+$/.test(h);const v=det?"seances":VIEWS.includes(h)?h:"synthese";VIEWS.forEach(n=>$("#v-"+n).hidden=n!==v);$("#sList").hidden=det;$("#sDetail").hidden=!det;
+const VIEWS=["synthese","charge","allure","contexte","seances","renfo","enseignements"];
+function route(){const h=location.hash.slice(1);const det=/^s-[0-9A-Za-z-]+$/.test(h);const v=det?"seances":h==="records"?"allure":VIEWS.includes(h)?h:"synthese";if(h==="records")setTimeout(()=>{const r=$("#recordsAnchor");r&&r.scrollIntoView({block:"start"})},80);VIEWS.forEach(n=>$("#v-"+n).hidden=n!==v);$("#sList").hidden=det;$("#sDetail").hidden=!det;
   if(det){APP.detail(h.slice(2));if(APP.curDetail&&APP.curDetail.a.slug===h.slice(2))loadDetail(APP.curDetail.a)}else APP.curDetail=null;document.querySelectorAll(".tabs a").forEach(a=>a.getAttribute("href")==="#"+v?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current"));
   document.body.dataset.view=v;const main=["synthese","seances","renfo","contexte"];document.querySelectorAll(".tabbar [data-nav]").forEach(a=>a.classList.toggle("on",a.dataset.nav===v||(a.dataset.nav==="more"&&!main.includes(v))));sheetClose()}
-window.addEventListener("hashchange",()=>{route();if(location.hash==="#enseignements")renderIns();window.scrollTo(0,0)});
+let rfRz=null;window.addEventListener("resize",()=>{clearTimeout(rfRz);rfRz=setTimeout(()=>{if(!RF_LIB_ALL&&location.hash==="#renfo")rfRenderLib()},200)});
+window.addEventListener("hashchange",()=>{if(location.hash==="#renfo")setTimeout(rfRenderLib,0);route();if(location.hash==="#enseignements")renderIns();window.scrollTo(0,0)});
 
-render();route();
+render();route();wxStart();
 
 /* ---------- aide « ? » ---------- */
 const HELP={
