@@ -1,6 +1,6 @@
 // Foulée — service worker : rend l'app installable et utilisable hors ligne (interface).
 // Les données passent par Firebase, qui garde sa propre copie hors ligne.
-const CACHE = "foulee-v1";
+const CACHE = "foulee-v2";
 const SHELL = ["foulee.html", "foulee-config.js", "foulee-manifest.json", "foulee-icon-192.png", "foulee-icon-512.png"];
 
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL))); self.skipWaiting(); });
