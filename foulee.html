@@ -816,7 +816,7 @@ body.lock{overflow:hidden}
 <section class="view" id="v-enseignements" hidden>
   <div class="hero"><div><div class="lab">Tes données croisées · mécanismes expliqués</div><h1 style="margin-top:6px">Ce que tes données <em>t'apprennent.</em></h1><p class="muted small" style="margin-top:6px">Des schémas calculés sur ton historique, avec ce qui se passe dans ton corps et quoi en faire.<button class="help" type="button" data-h="ins" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></p></div><div class="meta" id="insMeta"></div></div>
   <div class="card"><div class="hd"><h2>Qualité des données<button class="help" type="button" data-h="insData" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="muted small">60 derniers jours</span></div><div class="dqgrid" id="insData"></div></div>
-  <div class="card" id="insAiCard" hidden><div class="hd"><h2>Synthèse par l'IA locale<button class="help" type="button" data-h="insAi" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><button class="btn sm" type="button" id="insAiGo">Rédiger la synthèse</button></div><p class="muted small">L'IA met en mots les enseignements ci-dessous. Elle n'invente pas de chiffres : les cartes font foi.</p><div class="ins-ai" id="insAiOut" hidden></div></div>
+  <div class="card" id="insAiCard" hidden><div class="hd"><h2>Synthèse par l'IA<button class="help" type="button" data-h="insAi" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><button class="btn sm" type="button" id="insAiGo">Rédiger la synthèse</button></div><p class="muted small">L'IA met en mots les enseignements ci-dessous. Elle n'invente pas de chiffres : les cartes font foi.</p><div class="ins-ai" id="insAiOut" hidden></div></div>
   <div id="insList" class="insgrid"></div>
   <div class="card" id="insLocked" hidden></div>
 </section>
@@ -844,7 +844,7 @@ body.lock{overflow:hidden}
   <div class="ch"><span class="av">F</span><div><b>Coach Foulée<button class="help" type="button" data-h="coach" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></b><span class="muted small">Réponses calculées sur tes données</span></div><span class="pill good" style="margin-left:auto" id="coachData"></span><button class="x" type="button" id="coachClose" aria-label="Fermer le coach">✕</button></div>
   <div class="body" id="coachBody" aria-live="polite"></div>
   <div class="ft"><span class="lab">Autres questions</span><div class="chips" id="qs"></div>
-    <div id="aiBox" hidden><span class="lab">Question libre · IA locale</span><textarea id="aiQ" rows="2" aria-label="Question pour l'IA locale" placeholder="Pourquoi j'ai les jambes lourdes depuis mardi ?"></textarea><button class="btn sm" type="button" id="aiAskBtn">Demander</button><div id="aiOut" class="msg" hidden style="white-space:pre-wrap"></div></div></div>
+    <div id="aiBox" hidden><span class="lab">Question libre · IA</span><textarea id="aiQ" rows="2" aria-label="Question pour l'IA" placeholder="Pourquoi j'ai les jambes lourdes depuis mardi ?"></textarea><button class="btn sm" type="button" id="aiAskBtn">Demander</button><div id="aiOut" class="msg" hidden style="white-space:pre-wrap"></div></div></div>
 </aside>
 
 <footer><p><strong>Méthode.</strong> Charge = effort relatif Strava (FC) de toutes les activités ; forme et fatigue = moyennes exponentielles 42 j et 7 j, calculées jusqu'à aujourd'hui. Estimations de course : meilleure projection de Riegel (exposant 1,06) parmi tes sorties d'au moins 3 km et tes records des 90 derniers jours. Une sortie d'entraînement n'est pas un effort maximal, donc ces estimations sont prudentes. Zones d'allure Strava appliquées à l'allure moyenne de chaque séance. Le panneau Coach n'est pas une IA : ses réponses viennent de règles fixes appliquées aux chiffres de la page.</p></footer>
@@ -2703,7 +2703,9 @@ document.addEventListener("input",e=>{const t=e.target;if(!RPE_DRAFT||!t.id||!/^
 document.addEventListener("change",e=>{const t=e.target;if(RPE_DRAFT&&t.id==="rp-zone"){RPE_DRAFT.zone=t.value;RPE_JUST=null}});
 /* ---------- enseignements ---------- */
 let INS_DETAILS=false,INS_LAST=[];const INS_AI={};
-const aiOn=()=>{try{return!!(HOST.ai&&HOST.ai.url)}catch(e){return false}};
+const aiMode=()=>{try{const a=HOST.ai;return a?(a.mode||(a.url?"ollama":"off")):"off"}catch(e){return"off"}};
+const aiOn=()=>aiMode()!=="off";
+const AI_CLAUDE=[["claude-haiku-5-5","Claude Haiku 5.5 · le moins cher"],["claude-sonnet-5-5","Claude Sonnet 5.5 · le bon équilibre"],["claude-opus-5-5","Claude Opus 5.5 · le plus poussé"]];
 const LEGW=/jambe|squat|hyrox|fente|lower|cuisse|pliom|plyo/i;
 function insLoadDetails(){
   if(INS_DETAILS||!DB)return;INS_DETAILS=true;
@@ -2880,9 +2882,9 @@ function renderIns(){
   $("#insLocked").hidden=!lk.length;
 }
 document.addEventListener("click",async e=>{let b;
-  if(b=e.target.closest("[data-insai]")){const x=INS_LAST.find(i=>i.id===b.dataset.insai);if(!x)return;const out=$("#insai-"+x.id);out.hidden=false;out.textContent="L'IA locale réfléchit…";b.disabled=true;
+  if(b=e.target.closest("[data-insai]")){const x=INS_LAST.find(i=>i.id===b.dataset.insai);if(!x)return;const out=$("#insai-"+x.id);out.hidden=false;out.textContent="L'IA réfléchit…";b.disabled=true;
     try{INS_AI[x.id]=await aiAsk("Explique-moi cet enseignement avec mes chiffres, puis dis-moi concrètement quoi faire cette semaine. 6 phrases maximum.",insText(x)+"\nMécanisme : "+x.mech);out.textContent=INS_AI[x.id]}catch(err){out.textContent=err.message}b.disabled=false;return}
-  if(b=e.target.closest("#insAiGo")){const out=$("#insAiOut");out.hidden=false;out.textContent="L'IA locale réfléchit…";b.disabled=true;
+  if(b=e.target.closest("#insAiGo")){const out=$("#insAiOut");out.hidden=false;out.textContent="L'IA réfléchit…";b.disabled=true;
     try{out.textContent=await aiAsk("Fais-moi le point de mes enseignements : ce qui va bien, les 2 priorités à changer, et pourquoi. 10 phrases maximum, sans liste à rallonge.")}catch(err){out.textContent=err.message}b.disabled=false}
 });
 const INS_HELP={
@@ -2890,7 +2892,7 @@ wx:["Météo du jour",`<p>Les conditions actuelles et les prochaines heures à l
 ins:["Enseignements",`<p>Ici, l'appli croise tes données (séances, journal, ressenti, météo, détail Strava) pour repérer ce qui se répète chez toi : est-ce que le sommeil change tes sorties, si tes douleurs suivent tes pics de charge, si ton endurance progresse…</p><p>Chaque carte donne le constat avec tes chiffres, le mécanisme physiologique derrière, et quoi faire.</p><p><b>Solide</b> : assez de données pour s'y fier. <b>Indice</b> : tendance à confirmer. Ce sont des corrélations : elles orientent, elles ne prouvent pas une cause.</p>`],
 insData:["Qualité des données",`<p>Plus tu renseignes de choses, plus les enseignements sont fiables et nombreux. Ces barres montrent ce qui est saisi sur les 60 derniers jours.</p><p>Le plus utile, par ordre : le <b>ressenti</b> après chaque séance (30 secondes), le <b>sommeil</b> et la <b>FC au réveil</b>.</p>`],
 insLock:["À débloquer",`<p>Ces analyses existent déjà mais attendent plus de données. Le compteur montre où tu en es.</p>`],
-insAi:["Synthèse par l'IA",`<p>L'IA locale reçoit les enseignements calculés ci-dessous et tes dernières séances, et les met en mots. Elle ne calcule rien elle-même : si un chiffre n'est pas dans les données, elle doit le dire.</p><p>Relis toujours avec les cartes : ce sont elles qui font foi.</p>`],
+insAi:["Synthèse par l'IA",`<p>L'IA reçoit les enseignements calculés ci-dessous et tes dernières séances, et les met en mots. Elle ne calcule rien elle-même : si un chiffre n'est pas dans les données, elle doit le dire.</p><p>Relis toujours avec les cartes : ce sont elles qui font foi.</p>`],
 rpe:["Ton ressenti",`<p>L'<b>effort perçu</b> (échelle de Borg, de 1 à 10) est la note que tu donnes à la difficulté de la séance. C'est une mesure utilisée par les entraîneurs depuis des décennies et elle est étonnamment fiable.</p><p>La <b>charge perçue</b> = note × durée en minutes (méthode de Foster). Une sortie de 40 min notée 4 vaut 160 UA.</p><p>Comparée à ta fréquence cardiaque, elle révèle la fatigue que le cœur ne montre pas encore. Les sensations, la douleur et les glucides pris servent aux enseignements (crampes, blessures).</p>`]
 };
 
@@ -3213,17 +3215,18 @@ async function stravaReturn(){
 }
 /* --- IA locale (Ollama ou compatible) --- */
 async function aiAsk(question,extra){
-  const ai=HOST.ai;if(!ai||!ai.url)throw new Error("IA locale non configurée (réglages ⚙).");
+  const ai=HOST.ai||{},mode=aiMode();if(mode==="off")throw new Error("IA non configurée (Réglages › IA).");
   const c=APP.ctx;const runs=c.RUNS.slice(-12).map(r=>`${r.ds} ${r.name} : ${nf(r.km,1)} km à ${pace(r.p)}/km, effort ${r.re}${r.note?" — note : "+r.note:""}${RPE[r.slug]&&RPE[r.slug].rpe?" — ressenti "+RPE[r.slug].rpe+"/10"+(RPE[r.slug].tags&&RPE[r.slug].tags.length?" ("+RPE[r.slug].tags.join(", ")+")":""):""}`).join("\n");
   const est=c.EST.map(e=>`${e.lab} ${e.now?durHMS(e.now.t):"–"}`).join(", ");
   const jr=LOG.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,7).map(e=>`${e.date} : sommeil ${e.sleep??"?"} h, douleur ${e.pain??"–"} ${e.zone||""}, note ${e.note||""}`).join("\n");
   const sys="Tu es un entraîneur de course à pied. Réponds en français, de façon concise et concrète, uniquement à partir des données fournies. N'invente aucun chiffre : reprends seulement ceux qui sont donnés. Les « enseignements calculés » sont des analyses faites par l'application sur l'historique ; appuie-toi dessus en priorité, explique les mécanismes physiologiques simplement, et précise quand un enseignement n'est qu'un indice (peu de données). Si une donnée manque, dis-le. Tu ne poses pas de diagnostic médical.";
   const data=`Estimations actuelles : ${est}\nVolume moyen 8 semaines : ${nf(c.avg8,0)} km/sem\nFraîcheur (TSB) : ${nf(c.TSB[c.last],0)}\nProfil /10 : ${Object.entries(c.P).map(([k,v])=>k+" "+v).join(", ")}\n12 dernières sorties :\n${runs}\nJournal récent :\n${jr||"vide"}\nEnseignements calculés :\n${insSummary()}${extra?"\n\nEnseignement concerné :\n"+extra:""}`;
+  if(mode==="cf"||mode==="claude"){let j;try{j=await worker("/ai",{provider:mode,model:ai.model||"",system:sys,prompt:data+"\n\nQuestion : "+question})}catch(e){throw new Error(e&&e.message||"Le Worker n'a pas répondu.")}return j.text||"(réponse vide)"}
   const r=await fetch(ai.url.replace(/\/$/,"")+"/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:ai.model,stream:false,messages:[{role:"system",content:sys},{role:"user",content:data+"\n\nQuestion : "+question}]})});
   if(!r.ok)throw new Error("Le serveur IA a répondu "+r.status);const j=await r.json();return(j.message&&j.message.content)||j.response||"";
 }
 /* --- interface : connexion, réglages --- */
-let LOG_ALL=false,LOG_SHOW=false;
+let LOG_ALL=false,LOG_SHOW=false,AI_FORM=null;
 const BGS=[["defaut","Par défaut","linear-gradient(135deg,#FFE3D3,#F2F2F7)"],["olive","Vert olive","linear-gradient(135deg,#B9C77A,#6F8A1F)"],["orange","Orange","linear-gradient(135deg,#FFB070,#F2621F)"],["bleu","Bleu","linear-gradient(135deg,#7FC4FF,#2F6FEB)"],["jaune","Jaune","linear-gradient(135deg,#FFE680,#F0B400)"],["noir","Noir","linear-gradient(135deg,#3A3A3C,#000)"],["gris","Gris","linear-gradient(135deg,#E5E5EA,#8E8E93)"]];
 const curBg=()=>{try{return localStorage.getItem("foulee.bg")||"defaut"}catch(e){return"defaut"}};
 function applyBg(v){const r=document.documentElement;if(v&&v!=="defaut")r.setAttribute("data-bg",v);else r.removeAttribute("data-bg");try{localStorage.setItem("foulee.bg",v)}catch(e){}render();if(APP.curDetail)APP.detail(APP.curDetail.a.slug)}
@@ -3236,15 +3239,18 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-theme-set]
   if(e.target.closest("#logToggle")){LOG_ALL=!LOG_ALL;renderSettings()}});
 const settingsMsg=t=>{if($("#setPop").hidden)openSettings();const m=$("#setMsg");if(m)m.innerHTML=t};
 function showLogin(){$("#login").hidden=false;$("#lg-email").focus()}
-function openSettings(){$("#setPop").hidden=false;document.body.classList.add("lock");coachClose();renderSettings()}
+function openSettings(){AI_FORM=aiMode();$("#setPop").hidden=false;document.body.classList.add("lock");coachClose();renderSettings()}
 function closeSettings(){$("#setPop").hidden=true;document.body.classList.remove("lock")}
 function renderSettings(){
   const el=$("#setBody");if(!el)return;const s=HOST.strava;
   el.innerHTML=`<section><h3>Compte</h3><p class="small">${HOST.user?esc(HOST.user.email):"–"}</p><div class="row"><button class="btn sm ghost" type="button" id="setLogout">Se déconnecter</button></div></section>
   <section><h3>Strava</h3><p class="small">${s&&s.refresh_token?`<span class="pill good">API Strava active</span> ${s.athlete?esc(s.athlete.name):""}`:`<span class="pill line">Non connecté</span>`}</p><div class="row"><button class="btn sm ghost" type="button" id="setTestW">Tester le Worker</button><button class="btn sm" type="button" id="setStrava">${s&&s.refresh_token?"Reconnecter":"Connecter Strava"}</button>${s&&s.refresh_token?`<button class="btn sm ghost" type="button" id="setStravaOff">Déconnecter</button>`:""}</div></section>
-  <section><h3>IA locale</h3><p class="small muted">Adresse d'un serveur Ollama (ou compatible) : sur ce PC <code>http://localhost:11434</code>, depuis le téléphone l'adresse HTTPS de ton tunnel.</p>
-   <div class="row"><input id="aiUrl" placeholder="http://localhost:11434" value="${esc(HOST.ai&&HOST.ai.url||"")}" style="flex:2;min-width:180px"><input id="aiModel" placeholder="modèle (ex. qwen2.5:7b)" value="${esc(HOST.ai&&HOST.ai.model||"")}" style="flex:1;min-width:120px"></div>
-   <div class="row" style="margin-top:6px"><button class="btn sm" type="button" id="aiSave">Enregistrer et tester</button></div></section>
+  <section><h3>Intelligence artificielle</h3><span class="small muted">Moteur utilisé par le coach et les enseignements</span>
+   <div class="chips" id="aiModes">${[["off","Désactivée"],["cf","Cloudflare · gratuit, sans PC"],["claude","Claude · payant"],["ollama","Ollama · sur ton PC"]].map(([v,l])=>`<button class="chip" type="button" data-aimode="${v}" aria-pressed="${AI_FORM===v}">${l}</button>`).join("")}</div>
+   ${AI_FORM==="cf"?`<p class="small muted">Modèle Mistral Small 3.1 hébergé par Cloudflare, appelé par ton Worker. Gratuit dans la limite du quota quotidien de Cloudflare ; au-delà, l'IA répond « quota atteint » jusqu'au lendemain, sans frais. Il faut avoir ajouté le binding <code>AI</code> au Worker.</p>`:""}
+   ${AI_FORM==="claude"?`<label class="small muted" for="aiClaudeModel">Modèle<select id="aiClaudeModel">${AI_CLAUDE.map(([v,l])=>`<option value="${v}"${(HOST.ai&&HOST.ai.model||"claude-sonnet-5-5")===v?" selected":""}>${l}</option>`).join("")}</select></label><p class="small muted">Facturé à l'usage sur ton compte Claude Console. La clé reste dans Cloudflare (secret <code>ANTHROPIC_API_KEY</code>), jamais dans la page.</p>`:""}
+   ${AI_FORM==="ollama"?`<p class="small muted">Adresse d'un serveur Ollama : sur ce PC <code>http://localhost:11434</code>. Ne marche que quand le PC est allumé.</p><div class="row"><input id="aiUrl" placeholder="http://localhost:11434" value="${esc(HOST.ai&&HOST.ai.url||"")}" style="flex:2;min-width:180px"><input id="aiModel" placeholder="modèle (ex. qwen2.5:7b)" value="${esc(HOST.ai&&HOST.ai.mode!=="claude"&&HOST.ai.mode!=="cf"&&HOST.ai.model||"")}" style="flex:1;min-width:120px"></div>`:""}
+   <div class="row" style="margin-top:6px"><button class="btn sm" type="button" id="aiSave">Enregistrer${AI_FORM!=="off"?" et tester":""}</button></div></section>
   <section><h3>Apparence</h3><span class="small muted">Mode</span><div class="chips" id="themeChips">${[["auto","Automatique (comme le téléphone)"],["light","Clair"],["dark","Sombre"]].map(([v,l])=>`<button class="chip" type="button" data-theme-set="${v}" aria-pressed="${curTheme()===v}">${l}</button>`).join("")}</div>
    <span class="small muted" style="margin-top:6px">Couleur de fond</span><div class="swatches">${BGS.map(([v,l,g])=>`<button class="sw" type="button" data-bg-set="${v}" aria-pressed="${curBg()===v}"><i style="background:${g}"></i>${l}</button>`).join("")}</div>
    ${curBg()==="noir"?`<p class="small muted">Le fond noir utilise l'affichage sombre, quel que soit le mode choisi.</p>`:""}</section>
@@ -3264,7 +3270,7 @@ async function exportAll(){
   for(const col of ["journal","renfo","shoes","shoeuse","plan","races","activities","details","settings","rpe"]){const q=await DB.collection(col).get();if(!q.empty){out.collections[col]={};q.docs.forEach(d=>out.collections[col][d.id]=d.data())}}
   const blob=new Blob([JSON.stringify(out)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="foulee-sauvegarde-"+TODAY+".json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);logEvent("export");
 }
-document.addEventListener("click",async e=>{const t=e.target;
+document.addEventListener("click",async e=>{const t=e.target;let b0;
   if(t.closest("#setBtn")){openSettings();return}
   if(t.closest("#setClose")){closeSettings();return}
   if(t.closest("#logShow")){LOG_SHOW=!LOG_SHOW;renderSettings();return}
@@ -3273,11 +3279,17 @@ document.addEventListener("click",async e=>{const t=e.target;
   if(t.closest("#setStrava")){stravaAuthorize();return}
   if(t.closest("#setTestW")){settingsMsg("Test du Worker…");const r=await testWorker();settingsMsg(r==="ok"?`<span class="pill good">Worker OK</span> Il répond et reconnaît ta connexion. Tu peux connecter Strava.`:`<span class="pill bad">Worker en erreur</span> ${esc(r)}`);return}
   if(t.closest("#setStravaOff")){HOST.strava=null;MCP=null;await DB.doc("private/strava").delete();logEvent("Strava déconnecté");renderSettings();return}
-  if(t.closest("#aiSave")){HOST.ai={url:$("#aiUrl").value.trim(),model:$("#aiModel").value.trim()};await DB.doc("settings/ai").set(HOST.ai);renderIns();
-    try{const r=await fetch(HOST.ai.url.replace(/\/$/,"")+"/api/tags");const j=await r.json();const ms=(j.models||[]).map(m=>m.name);settingsMsg(`<span class="pill good">Serveur joignable</span> Modèles : ${esc(ms.join(", ")||"aucun")}${HOST.ai.model&&!ms.includes(HOST.ai.model)?" · le modèle indiqué n'est pas installé.":""}`)}
-    catch(err){settingsMsg(`<span class="pill bad">Injoignable</span> Vérifie que le serveur tourne et que l'adresse de Foulée est autorisée (variable OLLAMA_ORIGINS).`)}return}
+  if(b0=t.closest("[data-aimode]")){AI_FORM=b0.dataset.aimode;renderSettings();return}
+  if(t.closest("#aiSave")){const m=AI_FORM||"off";
+    HOST.ai=m==="ollama"?{mode:"ollama",url:$("#aiUrl").value.trim(),model:$("#aiModel").value.trim()}:m==="claude"?{mode:"claude",model:$("#aiClaudeModel").value}:m==="cf"?{mode:"cf",model:"@cf/mistralai/mistral-small-3.1-24b-instruct"}:{mode:"off"};
+    await DB.doc("settings/ai").set(HOST.ai);$("#aiBox").hidden=!aiOn();renderIns();
+    if(m==="off"){settingsMsg("IA désactivée.");return}
+    if(m==="ollama"){try{const r=await fetch(HOST.ai.url.replace(/\/$/,"")+"/api/tags");const j=await r.json();const ms=(j.models||[]).map(x=>x.name);settingsMsg(`<span class="pill good">Serveur joignable</span> Modèles : ${esc(ms.join(", ")||"aucun")}${HOST.ai.model&&!ms.includes(HOST.ai.model)?" · le modèle indiqué n'est pas installé.":""}`)}
+      catch(err){settingsMsg(`<span class="pill bad">Injoignable</span> Vérifie que le serveur tourne et que l'adresse de Foulée est autorisée (variable OLLAMA_ORIGINS).`)}return}
+    settingsMsg("Test en cours…");try{const j=await worker("/ai",{provider:m,model:HOST.ai.model,system:"Réponds en une phrase courte, en français.",prompt:"Dis bonjour à un coureur."});settingsMsg(`<span class="pill good">IA opérationnelle</span> ${esc(j.model||"")} : « ${esc(String(j.text||"").slice(0,160))} »`)}
+    catch(err){settingsMsg(`<span class="pill bad">IA en erreur</span> ${esc(err&&err.message||String(err))}`)}return}
   if(t.closest("#expBtn")){try{await exportAll()}catch(err){settingsMsg("Export impossible : "+esc(err.message||err.code))}return}
-  if(t.closest("#aiAskBtn")){const q=$("#aiQ").value.trim();if(!q)return;const out=$("#aiOut");out.hidden=false;out.textContent="L'IA locale réfléchit…";try{out.textContent=await aiAsk(q)}catch(err){out.textContent=err.message}return}
+  if(t.closest("#aiAskBtn")){const q=$("#aiQ").value.trim();if(!q)return;const out=$("#aiOut");out.hidden=false;out.textContent="L'IA réfléchit…";try{out.textContent=await aiAsk(q)}catch(err){out.textContent=err.message}return}
 });
 document.addEventListener("change",async e=>{if(e.target.id!=="impFile"||!e.target.files[0])return;settingsMsg("Import en cours…");try{const n=await importBackup(e.target.files[0]);settingsMsg(`<span class="pill good">Import terminé</span> ${n} éléments restaurés.`)}catch(err){settingsMsg("Import impossible : "+esc(err.message||err.code))}});
 $("#loginForm").addEventListener("submit",async e=>{e.preventDefault();const m=$("#lgMsg");m.textContent="Connexion…";
@@ -3302,7 +3314,7 @@ $("#lgReset").addEventListener("click",async()=>{const em=$("#lg-email").value.t
     DB.doc("races/next").onSnapshot(s=>{NEXT=s.exists?s.data():null;soon()},()=>{});
     try{const s=await DB.doc("private/strava").get();if(s.exists){HOST.strava=s.data();MCP=STRAVA_SHIM}}catch(e){}
     try{const s=await DB.doc("settings/ai").get();if(s.exists)HOST.ai=s.data()}catch(e){}
-    if(HOST.ai&&HOST.ai.url){$("#aiBox").hidden=false;renderIns()}
+    if(aiOn()){$("#aiBox").hidden=false;renderIns()}
     await stravaReturn();
     if(MCP&&APP.curDetail)loadDetail(APP.curDetail.a);
   });
