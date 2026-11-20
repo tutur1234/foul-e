@@ -608,6 +608,21 @@ body.lock{overflow:hidden}
 @media (max-width:640px){.wxnow{grid-template-columns:auto 1fr}.wxstats{grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr))}.wxhours{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .liblist{max-height:none!important;overflow:visible!important}
 .logo{background:linear-gradient(135deg,#D49A00,#F5C400)!important;color:#fff!important;box-shadow:0 3px 10px rgba(212,154,0,.35)!important}
+.rbintro{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;padding:18px;border-radius:var(--r-s);background:linear-gradient(135deg,var(--accent-soft),var(--sunk))}
+.rbintro p{max-width:58ch;font-size:14px}
+.rbstage{position:relative;border-radius:var(--r-s);overflow:hidden;background:radial-gradient(120% 90% at 50% 0%,var(--surface),var(--sunk))}
+#rbCanvas{display:block;width:100%;height:440px;touch-action:none;cursor:pointer}
+.rblab span{position:absolute;top:8px;font-size:11.5px;font-weight:600;color:var(--muted);background:var(--glass);padding:2px 8px;border-radius:99px}
+.rbphase{margin-top:8px;font-size:13px;font-weight:600;color:var(--ink);min-height:1.4em}
+.rbctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:12px}
+#rbScrub{width:100%;margin-top:10px;padding:0;box-shadow:none;background:transparent;accent-color:var(--accent)}
+.rbleg{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);margin-top:4px}
+.rbleg i{flex:0 1 180px;height:8px;border-radius:99px;background:linear-gradient(90deg,#B98A84,#FF3B1F)}
+.rbgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-top:14px}
+.rbinfo{padding:14px;border-radius:var(--r-s);background:var(--sunk);min-height:120px}
+.rbchip{display:inline-flex;align-items:center;gap:6px}.rbchip i{width:9px;height:9px;border-radius:50%;background:#FF3B1F;opacity:.2;flex:none}
+.rbcurve{width:100%;max-width:340px;height:auto;margin-top:10px;display:block}.rbst{fill:color-mix(in srgb,var(--ink) 6%,transparent)}.rbtx{font-size:10px;fill:var(--muted);font-family:var(--f-ui)}
+@media (max-width:760px){#rbCanvas{height:380px}.rbgrid{grid-template-columns:minmax(0,1fr)}}
 .more{display:flex;justify-content:center;margin-top:10px}.more:empty{display:none}
 .secsep{padding:14px 2px 0;border-top:.5px solid var(--line);margin-top:6px}
 .wchip.once{box-shadow:inset 0 0 0 1px var(--lift);background:transparent;border-style:dashed}
@@ -836,6 +851,7 @@ body.lock{overflow:hidden}
     </div>
   </div>
   <div class="card" id="rfCours"></div>
+  <div class="card" id="rbBox"></div>
   <div class="card"><div class="hd"><h2>Recommandations pour toi<button class="help" type="button" data-h="rfReco" aria-label="Comprendre cet indicateur" aria-expanded="false">?</button></h2><span class="pill line">Selon tes données</span></div><ul class="list" id="rfReco"></ul></div>
 </section>
 </main>
@@ -1984,7 +2000,7 @@ function renderRenfo(){
   }
   h+=`<p class="muted small" id="rfMsg" style="margin-top:8px" aria-live="polite"></p>`;
   $("#rfEditor").innerHTML=h;
-  rfRenderLib();rfRenderCours();rfRenderReco();
+  rfRenderLib();rfRenderCours();rfRenderReco();if(typeof renderRB==="function")renderRB();
 }
 function rfRenderLib(){
   const q=rfSlug(rfF.q);
@@ -2705,7 +2721,7 @@ document.addEventListener("change",e=>{const t=e.target;if(RPE_DRAFT&&t.id==="rp
 let INS_DETAILS=false,INS_LAST=[];const INS_AI={};
 const aiMode=()=>{try{const a=HOST.ai;return a?(a.mode||(a.url?"ollama":"off")):"off"}catch(e){return"off"}};
 const aiOn=()=>aiMode()!=="off";
-const AI_CLAUDE=[["claude-haiku-5-5","Claude Haiku 5.5 · le moins cher"],["claude-sonnet-5-5","Claude Sonnet 5.5 · le bon équilibre"],["claude-opus-5-5","Claude Opus 5.5 · le plus poussé"]];
+
 const LEGW=/jambe|squat|hyrox|fente|lower|cuisse|pliom|plyo/i;
 function insLoadDetails(){
   if(INS_DETAILS||!DB)return;INS_DETAILS=true;
@@ -2888,6 +2904,7 @@ document.addEventListener("click",async e=>{let b;
     try{out.textContent=await aiAsk("Fais-moi le point de mes enseignements : ce qui va bien, les 2 priorités à changer, et pourquoi. 10 phrases maximum, sans liste à rallonge.")}catch(err){out.textContent=err.message}b.disabled=false}
 });
 const INS_HELP={
+rbody:["Le corps en course",`<p>Un coureur modélisé en 3D qui reproduit un cycle de foulée complet : attaque du pied, amorti, poussée, envol, retour de la jambe.</p><p><b>Les couleurs</b> : plus un muscle est rouge, plus il travaille à cet instant. Les courbes d'activation reprennent les grandes tendances des mesures électromyographiques (EMG) publiées sur la course à allure modérée. Ce sont des profils moyens : selon ta vitesse, ta pose de pied et ta fatigue, les intensités changent, mais l'ordre et les moments restent les mêmes.</p><p><b>Utilisation</b> : touche un muscle pour voir son rôle et sa courbe d'activation sur la foulée (zone grisée = appui). « Ralenti » et la barre de défilement permettent de décomposer le mouvement. En mode « Libre », fais glisser pour tourner autour du coureur.</p><p>Le bouton « Voir les exercices » filtre la bibliothèque sur ce muscle.</p>`],
 wx:["Météo du jour",`<p>Les conditions actuelles et les prochaines heures à l'endroit choisi. Les données viennent des modèles de Météo-France (AROME, maille de 1,5 à 2,5 km, recalculé chaque heure, et ARPEGE au-delà), servis gratuitement par Open-Meteo.</p><p>La carte se met à jour seule toutes les 10 minutes quand l'appli est ouverte, et dès que tu y reviens. Le bouton ↻ force une mise à jour.</p><p><b>Meilleur créneau</b> : l'heure de jour, d'ici ce soir, où la température ressentie est la plus proche de 12 °C, sans pluie et avec le moins de vent. C'est la plage où l'on court le plus vite pour le même effort.</p><p>Le lieu reste enregistré sur cet appareil uniquement.</p>`],
 ins:["Enseignements",`<p>Ici, l'appli croise tes données (séances, journal, ressenti, météo, détail Strava) pour repérer ce qui se répète chez toi : est-ce que le sommeil change tes sorties, si tes douleurs suivent tes pics de charge, si ton endurance progresse…</p><p>Chaque carte donne le constat avec tes chiffres, le mécanisme physiologique derrière, et quoi faire.</p><p><b>Solide</b> : assez de données pour s'y fier. <b>Indice</b> : tendance à confirmer. Ce sont des corrélations : elles orientent, elles ne prouvent pas une cause.</p>`],
 insData:["Qualité des données",`<p>Plus tu renseignes de choses, plus les enseignements sont fiables et nombreux. Ces barres montrent ce qui est saisi sur les 60 derniers jours.</p><p>Le plus utile, par ordre : le <b>ressenti</b> après chaque séance (30 secondes), le <b>sommeil</b> et la <b>FC au réveil</b>.</p>`],
@@ -2984,6 +3001,168 @@ function wxStart(){renderWx();if(WX.loc){if(WX.loc.geo&&navigator.geolocation)na
   clearInterval(WX.timer);WX.timer=setInterval(()=>{if(document.visibilityState==="visible")wxFetch(true);else renderWx()},10*60e3)}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&WX.loc&&(!WX.at||Date.now()-WX.at>10*60e3))wxFetch(true)});
 setInterval(()=>{if(WX.data&&location.hash==="#contexte"&&!WX.search)renderWx()},60e3);
+
+/* ---------- le corps en course : animation 3D des muscles ---------- */
+const RB_MUS=[
+ {id:"glute_max",n:"Grand fessier",k:"F",c:[[0,.9],[.15,.5],[.3,.15],[.5,0],[.75,.15],[.88,.7],[1,.9]],
+  role:"Le plus gros muscle du corps. Il étend la hanche : c'est lui qui ramène la cuisse vers l'arrière et propulse le bassin vers l'avant. Il stabilise aussi le bassin quand le pied touche le sol.",
+  when:"Fin du retour de la jambe, puis attaque et début d'appui."},
+ {id:"glute_med",n:"Moyen fessier",k:"M",c:[[0,.7],[.12,1],[.3,.6],[.4,.15],[.5,0],[.85,.1],[.95,.5],[1,.7]],
+  role:"Sur le côté de la hanche. Quand tu es sur une seule jambe, il empêche le bassin de tomber du côté opposé et le genou de rentrer vers l'intérieur. Faible, il est souvent en cause dans les douleurs de genou et de bandelette.",
+  when:"Toute la phase d'appui, avec un pic à l'amorti."},
+ {id:"hipflex",n:"Psoas-iliaque",k:"H",c:[[0,0],[.3,.2],[.4,.7],[.5,1],[.62,.7],[.75,.2],[.85,0],[1,0]],
+  role:"Le principal fléchisseur de hanche, caché devant le bassin. Il tire la cuisse vers l'avant juste après la poussée. Plus il est rapide et souple, plus la jambe revient vite.",
+  when:"Juste après la poussée et au début du retour de la jambe."},
+ {id:"quads",n:"Quadriceps",k:"Q",c:[[0,.8],[.1,1],[.25,.6],[.38,.15],[.5,.1],[.7,0],[.85,.3],[.95,.6],[1,.8]],
+  role:"Les 4 muscles de l'avant de la cuisse. À la réception, ils freinent la flexion du genou en s'allongeant (travail excentrique) : ce sont les amortisseurs. C'est pour ça qu'ils souffrent en descente.",
+  when:"Préparation de l'attaque, puis première moitié de l'appui."},
+ {id:"hams",n:"Ischio-jambiers",k:"I",c:[[0,.6],[.1,.4],[.25,.15],[.4,0],[.6,.1],[.75,.6],[.88,1],[1,.6]],
+  role:"L'arrière de la cuisse. En fin de retour de jambe, ils freinent la jambe qui part vers l'avant, puis aident à étendre la hanche à la réception. C'est le moment où ils se claquent en sprint.",
+  when:"Fin du retour de la jambe (pic juste avant l'attaque) et début d'appui."},
+ {id:"adductors",n:"Adducteurs",k:"A",c:[[0,.4],[.1,.3],[.3,.4],[.4,.7],[.5,.3],[.7,.1],[.9,.3],[1,.4]],
+  role:"L'intérieur de la cuisse. Ils stabilisent la jambe dans l'axe et participent aux transitions entre flexion et extension de la hanche.",
+  when:"Autour de la poussée et de l'attaque."},
+ {id:"gastroc",n:"Gastrocnémiens (jumeaux)",k:"C",c:[[0,.3],[.1,.7],[.22,1],[.35,.6],[.42,0],[.85,0],[.95,.2],[1,.3]],
+  role:"La partie visible du mollet. Avec le tendon d'Achille, ils fonctionnent comme un ressort : ils stockent l'énergie à l'amorti et la rendent à la poussée.",
+  when:"Milieu et fin de l'appui, jusqu'au décollage du pied."},
+ {id:"soleus",n:"Soléaire",k:"S",c:[[0,.4],[.1,.85],[.22,1],[.35,.5],[.42,0],[.9,0],[1,.4]],
+  role:"Sous les jumeaux. C'est le muscle qui encaisse le plus de force en course : plusieurs fois le poids du corps à chaque appui. Il soulage aussi le tibia. On le renforce genoux fléchis.",
+  when:"Tout l'appui, avec un pic au milieu."},
+ {id:"tib_ant",n:"Tibial antérieur",k:"T",c:[[0,.8],[.08,.5],[.2,.1],[.38,.2],[.5,.7],[.7,.5],[.9,.6],[1,.8]],
+  role:"Le long du tibia, côté extérieur. Il relève la pointe du pied pendant le retour de la jambe pour ne pas accrocher le sol, puis contrôle la pose du pied à l'attaque. Trop sollicité, il donne des douleurs de type périostite.",
+  when:"Retour de la jambe et attaque du pied."},
+ {id:"foot",n:"Muscles du pied",k:"P",c:[[0,.3],[.15,.8],[.3,.9],[.4,.2],[.5,0],[.95,.1],[1,.3]],
+  role:"Les petits muscles sous le pied soutiennent la voûte plantaire, stabilisent l'appui et participent à l'effet ressort. Ils se renforcent pieds nus et avec le « pied court ».",
+  when:"Appui, surtout au moment de la poussée."},
+ {id:"abs",n:"Abdominaux et obliques",k:"G",c:[[0,.6],[.1,.4],[.25,.35],[.5,.6],[.6,.4],[.75,.35],[1,.6]],bi:1,
+  role:"Ils gainent le tronc et contrôlent la rotation entre le bassin et les épaules. Un tronc stable évite de perdre de l'énergie à chaque foulée, surtout en fin de course.",
+  when:"En continu, avec un pic à chaque attaque."},
+ {id:"erectors",n:"Érecteurs du rachis",k:"G",c:[[0,.9],[.12,.4],[.3,.2],[.5,.9],[.62,.4],[.8,.2],[1,.9]],bi:1,
+  role:"Le long de la colonne. Ils maintiennent le tronc droit et légèrement penché vers l'avant, et freinent sa bascule à chaque réception.",
+  when:"Pic à chaque contact du pied au sol."},
+ {id:"deltoid",n:"Épaules et bras",k:null,c:[[0,.4],[.25,.6],[.5,.4],[.75,.6],[1,.4]],
+  role:"Le balancier des bras compense la rotation créée par les jambes. Bras fléchis à 90°, mains relâchées : un bon balancier aide à garder le rythme, surtout en côte et en fin de course.",
+  when:"En continu, en opposition avec les jambes."}
+];
+const RB_PH=[[0,.07,"attaque du pied"],[.07,.2,"amorti"],[.2,.38,"poussée"],[.38,.5,"envol"],[.5,.78,"retour de la jambe"],[.78,.9,"fin du retour"],[.9,1,"envol, prépare l'attaque"]];
+const RB={T:null,loading:false,ready:false,run:true,t:0,speed:1,view:null,sel:null,az:.7,el:.12,raf:0,last:0,vis:false};
+const rbKey=(c,t)=>{t=((t%1)+1)%1;for(let i=1;i<c.length;i++)if(t<=c[i][0]){const a=c[i-1],b=c[i],u=(t-a[0])/(b[0]-a[0]||1),s=u*u*(3-2*u);return a[1]+(b[1]-a[1])*s}return c[c.length-1][1]};
+const RB_HIP=[[0,30],[.2,8],[.38,-14],[.5,5],[.65,35],[.8,46],[.9,38],[1,30]];
+const RB_KNEE=[[0,15],[.14,40],[.38,16],[.5,70],[.62,108],[.78,60],[.9,22],[1,15]];
+const RB_ANK=[[0,-2],[.14,18],[.38,-25],[.5,-8],[.7,6],[.9,2],[1,-2]];
+const rbPhase=t=>{t=((t%1)+1)%1;return(RB_PH.find(p=>t>=p[0]&&t<p[1])||RB_PH[0])[2]};
+function rbLoad(){return new Promise((res,rej)=>{if(window.THREE)return res();const urls=["https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js","https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"];let i=0;
+  const go=()=>{const s=document.createElement("script");s.src=urls[i];s.onload=()=>res();s.onerror=()=>{s.remove();if(++i<urls.length)go();else rej(new Error("three.js"))};document.head.appendChild(s)};go()})}
+function renderRB(){
+  const box=$("#rbBox");if(!box)return;
+  if(RB.ready&&box.querySelector("#rbCanvas"))return;
+  box.innerHTML=`<div class="hd"><h2>Le corps en course${HB("rbody")}</h2><span class="pill line">13 groupes musculaires</span></div>
+  ${RB.ready?"":`<div class="rbintro"><div><p>Un coureur en 3D, vu de côté et de face, avec chaque muscle qui s'allume au moment exact où il travaille dans la foulée. Touche un muscle pour savoir ce qu'il fait.</p>${RB.err?`<p class="small" style="color:var(--bad);margin-top:8px">${esc(RB.err)}</p>`:""}</div><button class="btn acc" type="button" id="rbStart"${RB.loading?" disabled":""}>${RB.loading?"Chargement…":"▶ Lancer l'animation"}</button></div>`}
+  ${RB.ready?rbUI():""}`;
+  if(RB.ready)rbMount();
+}
+function rbUI(){const wide=window.innerWidth>=760;if(!RB.view)RB.view=wide?"duo":"side";
+  return`<div class="rbwrap"><div class="rbstage"><canvas id="rbCanvas" aria-label="Animation 3D d'un coureur, muscles cliquables"></canvas><div class="rblab" id="rbLabs"></div></div><div class="rbphase" id="rbPhase"></div>
+  <div class="rbctl"><button class="btn sm" type="button" id="rbPlay">${RB.run?"❚❚ Pause":"▶ Lecture"}</button>
+  <div class="chips">${[["duo","Côté + face"],["side","De côté"],["front","De face"],["free","Libre"]].filter(v=>wide||v[0]!=="duo").map(([v,l])=>`<button class="chip" type="button" data-rbview="${v}" aria-pressed="${RB.view===v}">${l}</button>`).join("")}</div>
+  <div class="chips">${[[.35,"Ralenti"],[1,"Normal"]].map(([v,l])=>`<button class="chip" type="button" data-rbspeed="${v}" aria-pressed="${RB.speed===v}">${l}</button>`).join("")}</div></div>
+  <input type="range" id="rbScrub" min="0" max="1000" value="0" aria-label="Position dans la foulée">
+  <div class="rbleg"><span>Repos</span><i></i><span>Très sollicité</span></div>
+  <div class="rbgrid"><div class="rbinfo" id="rbInfo"></div><div><span class="lab">Tous les muscles</span><div class="chips" id="rbChips" style="margin-top:6px">${RB_MUS.map(m=>`<button class="chip rbchip" type="button" data-rbmus="${m.id}" aria-pressed="${RB.sel===m.id}"><i></i>${m.n}</button>`).join("")}</div></div></div></div>`}
+function rbBuild(){
+  const T=window.THREE,S=new T.Scene();const skin=new T.MeshStandardMaterial({color:0xC9CCD3,roughness:.75,metalness:0});
+  const mats={};RB_MUS.forEach(m=>{mats[m.id]=new T.MeshStandardMaterial({color:0xB98A84,roughness:.55,metalness:0,emissive:0x000000})});
+  const meshes=[];const ell=(p,x,y,z,sx,sy,sz,mat,mid)=>{const g=new T.Mesh(new T.SphereGeometry(1,28,20),mat);g.position.set(x,y,z);g.scale.set(sx,sy,sz);p.add(g);if(mid){g.userData.mid=mid;meshes.push(g)}return g};
+  const grp=(p,x,y,z)=>{const g=new T.Group();g.position.set(x,y,z);p.add(g);return g};
+  const root=grp(S,0,0,0),pelvis=grp(root,0,1,0);
+  ell(pelvis,0,0,0,.165,.11,.11,skin);
+  const torso=grp(pelvis,0,.07,0);ell(torso,0,.27,0,.16,.27,.105,skin);ell(torso,0,.575,0,.05,.06,.05,skin);ell(torso,0,.69,.015,.1,.115,.105,skin);ell(torso,0,.5,0,.2,.07,.1,skin);
+  ell(torso,0,.22,.088,.085,.15,.028,mats.abs,"abs");[-1,1].forEach(s=>{ell(torso,s*.105,.17,.06,.038,.12,.05,mats.abs,"abs");ell(torso,s*.042,.24,-.09,.032,.2,.03,mats.erectors,"erectors")});
+  const L={};
+  [["R",-1],["L",1]].forEach(([k,s])=>{const o={};
+    ell(pelvis,s*.08,-.03,-.088,.085,.09,.06,mats.glute_max,"glute_max");ell(pelvis,s*.138,.035,-.02,.042,.065,.06,mats.glute_med,"glute_med");ell(pelvis,s*.068,-.005,.085,.035,.07,.028,mats.hipflex,"hipflex");
+    o.sh=grp(torso,s*.205,.5,0);ell(o.sh,0,0,0,.065,.07,.065,mats.deltoid,"deltoid");ell(o.sh,0,-.15,0,.045,.14,.045,skin);
+    o.el=grp(o.sh,0,-.28,0);ell(o.el,0,0,0,.042,.042,.042,skin);ell(o.el,0,-.12,0,.038,.125,.038,skin);ell(o.el,0,-.26,0,.035,.045,.03,skin);
+    o.hip=grp(pelvis,s*.09,-.05,0);ell(o.hip,0,0,0,.075,.075,.075,skin);ell(o.hip,0,-.22,0,.072,.23,.078,skin);
+    ell(o.hip,0,-.2,.048,.064,.19,.042,mats.quads,"quads");ell(o.hip,0,-.23,-.05,.058,.18,.042,mats.hams,"hams");ell(o.hip,-s*.048,-.13,0,.03,.13,.05,mats.adductors,"adductors");
+    o.kn=grp(o.hip,0,-.45,0);ell(o.kn,0,0,0,.056,.056,.056,skin);ell(o.kn,0,-.2,0,.05,.21,.056,skin);
+    ell(o.kn,0,-.1,-.045,.048,.11,.038,mats.gastroc,"gastroc");ell(o.kn,0,-.25,-.035,.04,.09,.03,mats.soleus,"soleus");ell(o.kn,s*.022,-.18,.042,.022,.16,.022,mats.tib_ant,"tib_ant");
+    o.an=grp(o.kn,0,-.43,0);ell(o.an,0,0,0,.038,.038,.038,skin);ell(o.an,0,-.035,.055,.045,.035,.12,skin);ell(o.an,0,-.062,.05,.033,.012,.085,mats.foot,"foot");
+    o.toe=grp(o.an,0,-.07,.17);o.heel=grp(o.an,0,-.07,-.06);L[k]=o});
+  S.add(new T.HemisphereLight(0xffffff,0x8a8f99,.85));const d=new T.DirectionalLight(0xffffff,.75);d.position.set(2,4,3);S.add(d);const d2=new T.DirectionalLight(0xffffff,.35);d2.position.set(-3,2,-2);S.add(d2);
+  const ground=new T.Group();S.add(ground);const lm=new T.LineBasicMaterial({color:0x9aa0aa,transparent:true,opacity:.45});
+  for(let i=-10;i<=10;i++){const g=new T.BufferGeometry().setFromPoints([new T.Vector3(-.5,0,0),new T.Vector3(.5,0,0)]);const l=new T.Line(g,lm);l.position.z=i*.25;ground.add(l)}
+  const pad=new T.Mesh(new T.PlaneGeometry(1.1,5),new T.MeshStandardMaterial({color:0x9aa0aa,transparent:true,opacity:.12}));pad.rotation.x=-Math.PI/2;pad.position.y=-.001;S.add(pad);
+  RB.T={S,L,pelvis,torso,meshes,mats,ground,cam:new T.PerspectiveCamera(28,1,.1,50),ray:new T.Raycaster(),v:new T.Vector3()};
+  /* hauteur du bassin : la jambe d'appui touche le sol, parabole pendant l'envol */
+  const N=200,drop=[];for(let i=0;i<=N;i++){rbPose(i/N,0,true);RB.T.pelvis.updateMatrixWorld(true);const a=L.R.toe.getWorldPosition(new T.Vector3()).y,b=L.R.heel.getWorldPosition(new T.Vector3()).y;drop.push(Math.min(a,b))}
+  RB.T.drop=t=>{t=((t%1)+1)%1;return drop[Math.round(t*N)]};
+}
+function rbPose(t,yOff,noY){const T=RB.T,D=Math.PI/180;
+  const set=(o,tt)=>{o.hip.rotation.x=-rbKey(RB_HIP,tt)*D;o.kn.rotation.x=rbKey(RB_KNEE,tt)*D;o.an.rotation.x=-rbKey(RB_ANK,tt)*D;
+    o.sh.rotation.x=(rbKey(RB_HIP,tt)-16)*.75*D;o.el.rotation.x=-(78+12*Math.sin(2*Math.PI*tt))*D};
+  set(T.L.R,t);set(T.L.L,t+.5);T.torso.rotation.x=7*D;T.torso.rotation.y=-.1*Math.sin(2*Math.PI*(t+.1));T.pelvis.rotation.y=.07*Math.sin(2*Math.PI*(t+.1));
+  if(noY){T.pelvis.position.y=0;return}
+  const dr=T.drop;let y;const u=((t%1)+1)%1;
+  if(u<.38)y=-dr(u);else if(u<.5){const a=-dr(.38),b=-dr(0),k=(u-.38)/.12;y=a+(b-a)*k+.03*Math.sin(Math.PI*k)}
+  else if(u<.88)y=-dr(u-.5);else{const a=-dr(.38),b=-dr(0),k=(u-.88)/.12;y=a+(b-a)*k+.03*Math.sin(Math.PI*k)}
+  T.pelvis.position.y=y+(yOff||0);
+}
+function rbAct(m,t,side){return rbKey(m.c,m.bi?t:t+(side==="L"?.5:0))}
+function rbColor(t){const T=window.THREE,R=RB.T;const base=new T.Color(0xB98A84),hot=new T.Color(0xFF3B1F),selc=new T.Color(0xFFD60A);
+  R.meshes.forEach(g=>{const m=RB_MUS.find(x=>x.id===g.userData.mid);const side=g.parent===R.L.L.hip||g.parent===R.L.L.kn||g.parent===R.L.L.an||g.parent===R.L.L.sh||(g.parent===R.pelvis&&g.position.x>0)?"L":"R";
+    const a=rbAct(m,t,side);if(!g.material.__own){g.material=g.material.clone();g.material.__own=1}
+    g.material.color.copy(base).lerp(hot,a);g.material.emissive.copy(hot).multiplyScalar(a*.35);
+    if(RB.sel===m.id){const p=.5+.5*Math.sin(performance.now()/180);g.material.emissive.lerp(selc,.35+.25*p)}})}
+function rbMount(){
+  const cv=$("#rbCanvas");if(!cv||!RB.T)return;const T=window.THREE;
+  if(!RB.ren||RB.ren.domElement!==cv){if(RB.ren)RB.ren.dispose();RB.ren=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:true});RB.ren.setPixelRatio(Math.min(2,window.devicePixelRatio||1))}
+  rbInfo();rbLoop();
+  let down=null;cv.onpointerdown=e=>{down={x:e.clientX,y:e.clientY,az:RB.az,el:RB.el};cv.setPointerCapture(e.pointerId)};
+  cv.onpointermove=e=>{if(!down||RB.view!=="free")return;RB.az=down.az-(e.clientX-down.x)*.01;RB.el=clamp(down.el+(e.clientY-down.y)*.006,-.2,.9)};
+  cv.onpointerup=e=>{if(!down)return;const moved=Math.hypot(e.clientX-down.x,e.clientY-down.y)>6;down=null;if(!moved)rbPick(e)};
+}
+function rbViews(){const cv=$("#rbCanvas"),w=cv.clientWidth,h=cv.clientHeight;if(RB.view==="duo")return[{x:0,w:w/2,h,k:"side"},{x:w/2,w:w/2,h,k:"front"}];return[{x:0,w,h,k:RB.view}]}
+function rbCam(k,asp){const c=RB.T.cam,ty=.95;c.aspect=asp;c.fov=asp<.75?34:28;c.updateProjectionMatrix();const r=4.2;
+  if(k==="side")c.position.set(-r,1.05,.05);else if(k==="front")c.position.set(0,1.1,r);else c.position.set(r*Math.sin(RB.az)*Math.cos(RB.el),ty+r*Math.sin(RB.el),r*Math.cos(RB.az)*Math.cos(RB.el));
+  c.lookAt(0,ty,0);c.updateMatrixWorld();return c}
+function rbFrame(){
+  const cv=$("#rbCanvas");if(!cv||!RB.ren)return;const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;
+  if(cv.width!==Math.round(w*RB.ren.getPixelRatio())||cv.height!==Math.round(h*RB.ren.getPixelRatio()))RB.ren.setSize(w,h,false);
+  rbPose(RB.t);rbColor(RB.t);const g=RB.T.ground;g.position.z=-((RB.t*2.5)%.25);
+  RB.ren.setScissorTest(true);rbViews().forEach(v=>{RB.ren.setViewport(v.x,0,v.w,v.h);RB.ren.setScissor(v.x,0,v.w,v.h);RB.ren.render(RB.T.S,rbCam(v.k,v.w/v.h))});
+  const labs=$("#rbLabs");if(labs){const vs=rbViews(),nm={side:"De côté",front:"De face",free:"Glisse pour tourner"};labs.innerHTML=vs.map(v=>`<span style="left:${v.x+10}px">${nm[v.k]}</span>`).join("")}
+  const ph=$("#rbPhase");if(ph)ph.textContent=`Jambe droite : ${rbPhase(RB.t)} · Jambe gauche : ${rbPhase(RB.t+.5)}`;
+  const sc=$("#rbScrub");if(sc&&document.activeElement!==sc)sc.value=Math.round(RB.t*1000);
+  document.querySelectorAll(".rbchip").forEach(b=>{const m=RB_MUS.find(x=>x.id===b.dataset.rbmus),a=Math.max(rbAct(m,RB.t,"R"),rbAct(m,RB.t,"L"));b.querySelector("i").style.opacity=(.15+a*.85).toFixed(2)});
+  const cur=$("#rbCur");if(cur)cur.setAttribute("x",(RB.t*300).toFixed(1));
+}
+function rbLoop(){cancelAnimationFrame(RB.raf);const tick=now=>{RB.raf=requestAnimationFrame(tick);const cv=$("#rbCanvas");if(!cv||!cv.isConnected||location.hash!=="#renfo"||document.hidden){RB.last=now;return}
+  const r=cv.getBoundingClientRect();if(r.bottom<0||r.top>window.innerHeight){RB.last=now;return}
+  const dt=Math.min(.05,(now-(RB.last||now))/1000);RB.last=now;if(RB.run)RB.t=(RB.t+dt*.72*RB.speed)%1;rbFrame()};RB.raf=requestAnimationFrame(tick)}
+function rbPick(e){const cv=$("#rbCanvas"),r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;const v=rbViews().find(v=>x>=v.x&&x<v.x+v.w);if(!v)return;
+  rbPose(RB.t);RB.T.pelvis.updateMatrixWorld(true);const cam=rbCam(v.k,v.w/v.h);const T=window.THREE;
+  RB.T.ray.setFromCamera(new T.Vector2(((x-v.x)/v.w)*2-1,-(y/v.h)*2+1),cam);const hit=RB.T.ray.intersectObjects(RB.T.meshes,false)[0];
+  if(hit){RB.sel=hit.object.userData.mid;rbInfo();rbFrame()}}
+function rbInfo(){const el=$("#rbInfo");if(!el)return;document.querySelectorAll("[data-rbmus]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.rbmus===RB.sel)));
+  const m=RB_MUS.find(x=>x.id===RB.sel);
+  if(!m){el.innerHTML=`<p class="muted small">Touche un muscle sur le coureur (ou dans la liste) pour voir son nom, son rôle et le moment où il travaille. Le rouge indique les muscles les plus sollicités à cet instant.</p>`;return}
+  const pts=[];for(let i=0;i<=60;i++){const t=i/60;pts.push(`${(t*300).toFixed(1)},${(52-rbAct(m,t,"R")*46).toFixed(1)}`)}
+  const n=m.k?EXOS.filter(x=>x.m.includes(m.k)).length:0;
+  el.innerHTML=`<div class="row" style="justify-content:space-between;align-items:flex-start;gap:8px"><h3 style="font-size:17px">${m.n}</h3><button class="chip" type="button" id="rbClear" aria-label="Fermer">✕</button></div>
+  <p class="small" style="margin-top:6px">${m.role}</p><p class="small muted" style="margin-top:6px"><b>Quand :</b> ${m.when}</p>
+  <svg viewBox="0 0 300 70" class="rbcurve" role="img" aria-label="Activation de ${m.n} au fil de la foulée (jambe droite)"><rect x="0" y="0" width="114" height="56" class="rbst"/><polyline points="${pts.join(" ")}" fill="none" stroke="var(--accent)" stroke-width="2"/><rect id="rbCur" x="0" y="0" width="2" height="56" fill="var(--ink)"/><text x="4" y="68" class="rbtx">Appui</text><text x="150" y="68" class="rbtx">Retour de la jambe</text></svg>
+  ${n?`<button class="btn ghost sm" type="button" data-rbex="${m.k}" style="margin-top:8px">Voir les ${n} exercices pour ce muscle</button>`:""}`}
+document.addEventListener("click",async e=>{const t=e.target;let b;
+  if(t.closest("#rbStart")){RB.loading=true;RB.err=null;renderRB();try{await rbLoad();rbBuild();RB.ready=true;RB.loading=false;renderRB()}catch(err){RB.loading=false;RB.err="Impossible de charger le moteur 3D (connexion ?). Réessaie dans un instant.";renderRB()}return}
+  if(t.closest("#rbPlay")){RB.run=!RB.run;t.closest("#rbPlay").textContent=RB.run?"❚❚ Pause":"▶ Lecture";return}
+  if(b=t.closest("[data-rbview]")){RB.view=b.dataset.rbview;document.querySelectorAll("[data-rbview]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));return}
+  if(b=t.closest("[data-rbspeed]")){RB.speed=+b.dataset.rbspeed;document.querySelectorAll("[data-rbspeed]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));return}
+  if(b=t.closest("[data-rbmus]")){RB.sel=RB.sel===b.dataset.rbmus?null:b.dataset.rbmus;rbInfo();return}
+  if(t.closest("#rbClear")){RB.sel=null;rbInfo();return}
+  if(b=t.closest("[data-rbex]")){rfF.m=b.dataset.rbex;RF_LIB_ALL=true;RF_LIMIT=60;document.querySelectorAll("#rfMus .chip").forEach(c=>c.setAttribute("aria-pressed",String(c.dataset.mus===rfF.m)));rfRenderLib();$("#rfList").closest(".card").scrollIntoView({behavior:"smooth",block:"start"});return}
+});
+document.addEventListener("input",e=>{if(e.target.id!=="rbScrub")return;RB.run=false;const p=$("#rbPlay");if(p)p.textContent="▶ Lecture";RB.t=(+e.target.value)/1000;rbFrame()});
 
 /* ---------- navigation mobile, coach en bulle ---------- */
 function sheetClose(){const sh=$("#moreSheet");if(!sh)return;sh.classList.remove("open");sh.setAttribute("aria-hidden","true");if(!document.body.classList.contains("coach-open"))$("#scrim").classList.remove("on")}
@@ -3221,7 +3400,7 @@ async function aiAsk(question,extra){
   const jr=LOG.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,7).map(e=>`${e.date} : sommeil ${e.sleep??"?"} h, douleur ${e.pain??"–"} ${e.zone||""}, note ${e.note||""}`).join("\n");
   const sys="Tu es un entraîneur de course à pied. Réponds en français, de façon concise et concrète, uniquement à partir des données fournies. N'invente aucun chiffre : reprends seulement ceux qui sont donnés. Les « enseignements calculés » sont des analyses faites par l'application sur l'historique ; appuie-toi dessus en priorité, explique les mécanismes physiologiques simplement, et précise quand un enseignement n'est qu'un indice (peu de données). Si une donnée manque, dis-le. Tu ne poses pas de diagnostic médical.";
   const data=`Estimations actuelles : ${est}\nVolume moyen 8 semaines : ${nf(c.avg8,0)} km/sem\nFraîcheur (TSB) : ${nf(c.TSB[c.last],0)}\nProfil /10 : ${Object.entries(c.P).map(([k,v])=>k+" "+v).join(", ")}\n12 dernières sorties :\n${runs}\nJournal récent :\n${jr||"vide"}\nEnseignements calculés :\n${insSummary()}${extra?"\n\nEnseignement concerné :\n"+extra:""}`;
-  if(mode==="cf"||mode==="claude"){let j;try{j=await worker("/ai",{provider:mode,model:ai.model||"",system:sys,prompt:data+"\n\nQuestion : "+question})}catch(e){throw new Error(e&&e.message||"Le Worker n'a pas répondu.")}return j.text||"(réponse vide)"}
+  if(mode==="cf"){let j;try{j=await worker("/ai",{provider:mode,model:ai.model||"",system:sys,prompt:data+"\n\nQuestion : "+question})}catch(e){throw new Error(e&&e.message||"Le Worker n'a pas répondu.")}return j.text||"(réponse vide)"}
   const r=await fetch(ai.url.replace(/\/$/,"")+"/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:ai.model,stream:false,messages:[{role:"system",content:sys},{role:"user",content:data+"\n\nQuestion : "+question}]})});
   if(!r.ok)throw new Error("Le serveur IA a répondu "+r.status);const j=await r.json();return(j.message&&j.message.content)||j.response||"";
 }
@@ -3239,17 +3418,16 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-theme-set]
   if(e.target.closest("#logToggle")){LOG_ALL=!LOG_ALL;renderSettings()}});
 const settingsMsg=t=>{if($("#setPop").hidden)openSettings();const m=$("#setMsg");if(m)m.innerHTML=t};
 function showLogin(){$("#login").hidden=false;$("#lg-email").focus()}
-function openSettings(){AI_FORM=aiMode();$("#setPop").hidden=false;document.body.classList.add("lock");coachClose();renderSettings()}
+function openSettings(){AI_FORM=aiMode()==="off"&&!(HOST.ai&&HOST.ai.mode)?"cf":aiMode();$("#setPop").hidden=false;document.body.classList.add("lock");coachClose();renderSettings()}
 function closeSettings(){$("#setPop").hidden=true;document.body.classList.remove("lock")}
 function renderSettings(){
   const el=$("#setBody");if(!el)return;const s=HOST.strava;
   el.innerHTML=`<section><h3>Compte</h3><p class="small">${HOST.user?esc(HOST.user.email):"–"}</p><div class="row"><button class="btn sm ghost" type="button" id="setLogout">Se déconnecter</button></div></section>
   <section><h3>Strava</h3><p class="small">${s&&s.refresh_token?`<span class="pill good">API Strava active</span> ${s.athlete?esc(s.athlete.name):""}`:`<span class="pill line">Non connecté</span>`}</p><div class="row"><button class="btn sm ghost" type="button" id="setTestW">Tester le Worker</button><button class="btn sm" type="button" id="setStrava">${s&&s.refresh_token?"Reconnecter":"Connecter Strava"}</button>${s&&s.refresh_token?`<button class="btn sm ghost" type="button" id="setStravaOff">Déconnecter</button>`:""}</div></section>
   <section><h3>Intelligence artificielle</h3><span class="small muted">Moteur utilisé par le coach et les enseignements</span>
-   <div class="chips" id="aiModes">${[["off","Désactivée"],["cf","Cloudflare · gratuit, sans PC"],["claude","Claude · payant"],["ollama","Ollama · sur ton PC"]].map(([v,l])=>`<button class="chip" type="button" data-aimode="${v}" aria-pressed="${AI_FORM===v}">${l}</button>`).join("")}</div>
-   ${AI_FORM==="cf"?`<p class="small muted">Modèle Mistral Small 3.1 hébergé par Cloudflare, appelé par ton Worker. Gratuit dans la limite du quota quotidien de Cloudflare ; au-delà, l'IA répond « quota atteint » jusqu'au lendemain, sans frais. Il faut avoir ajouté le binding <code>AI</code> au Worker.</p>`:""}
-   ${AI_FORM==="claude"?`<label class="small muted" for="aiClaudeModel">Modèle<select id="aiClaudeModel">${AI_CLAUDE.map(([v,l])=>`<option value="${v}"${(HOST.ai&&HOST.ai.model||"claude-sonnet-5-5")===v?" selected":""}>${l}</option>`).join("")}</select></label><p class="small muted">Facturé à l'usage sur ton compte Claude Console. La clé reste dans Cloudflare (secret <code>ANTHROPIC_API_KEY</code>), jamais dans la page.</p>`:""}
-   ${AI_FORM==="ollama"?`<p class="small muted">Adresse d'un serveur Ollama : sur ce PC <code>http://localhost:11434</code>. Ne marche que quand le PC est allumé.</p><div class="row"><input id="aiUrl" placeholder="http://localhost:11434" value="${esc(HOST.ai&&HOST.ai.url||"")}" style="flex:2;min-width:180px"><input id="aiModel" placeholder="modèle (ex. qwen2.5:7b)" value="${esc(HOST.ai&&HOST.ai.mode!=="claude"&&HOST.ai.mode!=="cf"&&HOST.ai.model||"")}" style="flex:1;min-width:120px"></div>`:""}
+   <div class="chips" id="aiModes">${[["off","Désactivée"],["cf","Mistral · gratuit, sans PC"],["ollama","Ollama · sur ton PC"]].map(([v,l])=>`<button class="chip" type="button" data-aimode="${v}" aria-pressed="${AI_FORM===v}">${l}</button>`).join("")}</div>
+   ${AI_FORM==="cf"?`<p class="small muted">Mistral Small 3.1, le modèle de la société française Mistral AI, hébergé par Cloudflare et appelé par ton Worker. Gratuit dans la limite du quota quotidien de Cloudflare ; au-delà, l'IA répond « quota atteint » jusqu'au lendemain, sans frais. Il faut avoir ajouté le binding <code>AI</code> au Worker.</p>`:""}
+   ${AI_FORM==="ollama"?`<p class="small muted">Adresse d'un serveur Ollama : sur ce PC <code>http://localhost:11434</code>. Ne marche que quand le PC est allumé.</p><div class="row"><input id="aiUrl" placeholder="http://localhost:11434" value="${esc(HOST.ai&&HOST.ai.url||"")}" style="flex:2;min-width:180px"><input id="aiModel" placeholder="modèle (ex. qwen2.5:7b)" value="${esc(HOST.ai&&HOST.ai.mode!=="cf"&&HOST.ai.model||"")}" style="flex:1;min-width:120px"></div>`:""}
    <div class="row" style="margin-top:6px"><button class="btn sm" type="button" id="aiSave">Enregistrer${AI_FORM!=="off"?" et tester":""}</button></div></section>
   <section><h3>Apparence</h3><span class="small muted">Mode</span><div class="chips" id="themeChips">${[["auto","Automatique (comme le téléphone)"],["light","Clair"],["dark","Sombre"]].map(([v,l])=>`<button class="chip" type="button" data-theme-set="${v}" aria-pressed="${curTheme()===v}">${l}</button>`).join("")}</div>
    <span class="small muted" style="margin-top:6px">Couleur de fond</span><div class="swatches">${BGS.map(([v,l,g])=>`<button class="sw" type="button" data-bg-set="${v}" aria-pressed="${curBg()===v}"><i style="background:${g}"></i>${l}</button>`).join("")}</div>
@@ -3281,7 +3459,7 @@ document.addEventListener("click",async e=>{const t=e.target;let b0;
   if(t.closest("#setStravaOff")){HOST.strava=null;MCP=null;await DB.doc("private/strava").delete();logEvent("Strava déconnecté");renderSettings();return}
   if(b0=t.closest("[data-aimode]")){AI_FORM=b0.dataset.aimode;renderSettings();return}
   if(t.closest("#aiSave")){const m=AI_FORM||"off";
-    HOST.ai=m==="ollama"?{mode:"ollama",url:$("#aiUrl").value.trim(),model:$("#aiModel").value.trim()}:m==="claude"?{mode:"claude",model:$("#aiClaudeModel").value}:m==="cf"?{mode:"cf",model:"@cf/mistralai/mistral-small-3.1-24b-instruct"}:{mode:"off"};
+    HOST.ai=m==="ollama"?{mode:"ollama",url:$("#aiUrl").value.trim(),model:$("#aiModel").value.trim()}:m==="cf"?{mode:"cf",model:"@cf/mistralai/mistral-small-3.1-24b-instruct"}:{mode:"off"};
     await DB.doc("settings/ai").set(HOST.ai);$("#aiBox").hidden=!aiOn();renderIns();
     if(m==="off"){settingsMsg("IA désactivée.");return}
     if(m==="ollama"){try{const r=await fetch(HOST.ai.url.replace(/\/$/,"")+"/api/tags");const j=await r.json();const ms=(j.models||[]).map(x=>x.name);settingsMsg(`<span class="pill good">Serveur joignable</span> Modèles : ${esc(ms.join(", ")||"aucun")}${HOST.ai.model&&!ms.includes(HOST.ai.model)?" · le modèle indiqué n'est pas installé.":""}`)}
